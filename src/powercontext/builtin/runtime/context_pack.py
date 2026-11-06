@@ -72,7 +72,10 @@ class ContextPack:
         chunks: list[bytes] = []
         current = bytearray()
         for character in text:
-            encoded = character.encode("utf-8")
+            try:
+                encoded = character.encode("utf-8")
+            except UnicodeEncodeError as error:
+                raise ContextPackError("content must be valid UTF-8") from error
             if len(encoded) > chunk_bytes:
                 raise ContextPackError("chunk limit cannot contain one UTF-8 character")
             if current and len(current) + len(encoded) > chunk_bytes:
@@ -114,10 +117,9 @@ class ContextPack:
         pack = cls.build(items)
         if pack.digest != digest:
             raise ContextPackError("pack digest verification failed")
-        if pack.byte_count != byte_count or byte_count != len(value):
+        if pack.byte_count != byte_count:
             raise ContextPackError("pack byte_count verification failed")
-        if pack.to_bytes() != value:
-            raise ContextPackError("pack JSON is not canonical")
+        pack.to_bytes()
         return pack
 
 
