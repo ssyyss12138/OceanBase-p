@@ -249,6 +249,7 @@ from powercontext.builtin.runtime.recall_sufficiency import (
     build_recall_candidates,
     recall_effort,
 )
+from powercontext.builtin.runtime.source_lifecycle import SourceLifecycleApplication
 from powercontext.builtin.runtime.statistics import RelationalScopedStatistics, overview_selection
 from powercontext.builtin.scope import ScopeApplication, ScopeDescriptor, ScopeSelection
 from powercontext.builtin.scope.subject_sources import SubjectSourceService
@@ -2725,6 +2726,18 @@ class ScopedTopicMemoryApplication:
                     query_embedding,
                     embedding_timeout_seconds,
                 )
+        invisible = await self._runtime.lifecycle.for_scope(self.scope_id).inactive_topic_refs()
+        if invisible:
+            result = result.model_copy(
+                update={
+                    "hits": tuple(
+                        hit
+                        for hit in result.hits
+                        if (hit.artifact_ref.family, hit.artifact_ref.artifact_id, hit.artifact_ref.revision)
+                        not in invisible
+                    )
+                }
+            )
         observer = self._runtime._topic_memory_search_observer
         if observer is not None:
             try:
@@ -2836,7 +2849,15 @@ class ScopedTopicMemoryApplication:
         if not 1 <= limit <= 100:
             raise InvalidRuntimeRequestError("topic-memory-browse-limit")
         async with self._runtime._scoped_operation(self.scope_id):
-            return await self._runtime._topic_memory_browse(self.scope_id, limit=limit, after=after)
+            items = await self._runtime._topic_memory_browse(self.scope_id, limit=limit, after=after)
+        invisible = await self._runtime.lifecycle.for_scope(self.scope_id).inactive_topic_refs()
+        if not invisible:
+            return items
+        return tuple(
+            item
+            for item in items
+            if (item.artifact_ref.family, item.artifact_ref.artifact_id, item.artifact_ref.revision) not in invisible
+        )
 
     async def flush(self) -> TopicMemoryFlushResult:
         if not self._runtime._topic_memory_processing_available or self._runtime._topic_memory_flush is None:
@@ -3157,6 +3178,7 @@ class BuiltinRuntime:
         self._closed = False
         self._scheduler: AsyncIOScheduler | None = None
         self._scheduler_runtime_key: str | None = None
+        self._lifecycle_database = getattr(provider, "database", None)
         # First-seen Memory recall pool shared by every short-lived
         # ScopedContextApplication.  Keeping it on the Runtime is required:
         # for_scope() creates a fresh application for each round and would
@@ -3166,6 +3188,7 @@ class BuiltinRuntime:
         self.ingestion = RemoteIngestionApplication(self, remote_ingestion)
         self.code = CodeApplication(self, code_service or CodeService(CodeConfig()))
         self.context = ContextApplication(self)
+        self.lifecycle = SourceLifecycleApplication(self)
         self.experience = ExperienceApplication(self)
         self.dream = DreamApplication(self)
         self.external_skills = ExternalSkillApplication(self)
