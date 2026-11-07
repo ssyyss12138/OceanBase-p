@@ -20,15 +20,14 @@ class TicketService:
             raise ValueError("page must be at least 1")
         if page_size < 1:
             raise ValueError("page_size must be at least 1")
-        if status is not None and status not in self.VALID_STATUSES:
-            raise ValueError(f"unsupported status: {status}")
 
-        filtered = (
-            self._tickets
-            if status is None
-            else tuple(ticket for ticket in self._tickets if ticket.status == status)
-        )
-        ordered = sorted(filtered, key=lambda ticket: (ticket.created_at, ticket.id), reverse=True)
+        tickets = self._tickets
+        if status is not None:
+            if status not in self.VALID_STATUSES:
+                raise ValueError(f"unsupported status: {status}")
+            tickets = tuple(ticket for ticket in tickets if ticket.status == status)
+
+        ordered = sorted(tickets, key=lambda ticket: (ticket.created_at, ticket.id), reverse=True)
         start = (page - 1) * page_size
         items = ordered[start : start + page_size]
         return {

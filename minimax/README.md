@@ -168,4 +168,4 @@ PYTHONPATH=src python3 -m sdd_context.cli --db .runtime/demo.db --records record
 - 输出被 `max_tokens` 截断时会显式报错，不落盘半截补丁。
 - MiniMax key 只存在于本地 `.env`（已 gitignore），仓库与证据中不含任何凭据。
 - 复现所需的一切都在仓库内：`records/minimax/actual-run/` 是 `--mode replay` 的输入，无需额度。
-- `verification_summary.json` 中的 `git_commit` 是生成该记录时的代码提交；运行产生的 `records/` 以随后的证据提交入库，两次提交的源码树相同。
+- `verification_summary.json` 中的 `git_commit` 是生成该记录时的代码提交；运行产生的 `records/` 随后以一次证据提交入库。产品代码（`src/`、`scripts/`、`tests/`、`sample_project/`）在两次提交中完全相同，证据提交只新增或刷新 `records/` 与文档中的差异摘录。

@@ -1,5 +1,5 @@
 {
-  "mode": "replay",
+  "mode": "online",
   "task_id": "TASK-TICKET-STATUS",
   "before": {
     "target_exit": 1,
@@ -14,6 +14,6 @@
   "state_reused": true,
   "spec_version_after_update": 2,
   "database_context_verified": true,
-  "minimax_record": "records/reproduction/minimax/replayed-run",
-  "git_commit": "d647275c308e09b7b623f322a26f5c4e85734fb0"
+  "minimax_record": "records/minimax/actual-run",
+  "git_commit": "24a5c9d3393c61af54c1ebf0885ed62f689b5db9"
 }

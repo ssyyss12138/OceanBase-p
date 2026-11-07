@@ -1,13 +1,13 @@
 command: /mnt/kai_ckp/yiding/WangYuning/seekdb_competition/powercontext-minimax/minimax/.venv/bin/python3 -m pytest tests/test_ticket_status_filter.py -q
 exit_code: 1
-git_commit: d647275c308e09b7b623f322a26f5c4e85734fb0
+git_commit: 24a5c9d3393c61af54c1ebf0885ed62f689b5db9
 source_sha256: {"src/ticket_service.py": "4c648d2fdad05ffa8945a1d621c6d2b563dc9c0404beec990432b9abcd0256c2", "tests/test_ticket_status_filter.py": "aa1246cd64e79cf25e91a6ef20ed19f693f76f1c5daa98c7c87a810ac8ab0b78", "tests/test_ticket_regression.py": "7d082fe213007459284cfb5f8c8c25739c8b56bc71fcfe30097304016347c962"}
 
 FFFF                                                                     [100%]
 =================================== FAILURES ===================================
 ___________________ test_open_filter_limits_items_and_total ____________________
 
-service = <ticket_service.TicketService object at 0x7f4d06be6cd0>
+service = <ticket_service.TicketService object at 0x7ff93d806090>
 
     def test_open_filter_limits_items_and_total(service):
         result = service.list_tickets(status="open")
@@ -21,7 +21,7 @@ E         Use -v to get more diff
 tests/test_ticket_status_filter.py:6: AssertionError
 ____________________ test_filter_applies_before_pagination _____________________
 
-service = <ticket_service.TicketService object at 0x7f4d06be7e90>
+service = <ticket_service.TicketService object at 0x7ff93d804f50>
 
     def test_filter_applies_before_pagination(service):
         result = service.list_tickets(status="open", page=3, page_size=1)
@@ -34,7 +34,7 @@ E         Use -v to get more diff
 tests/test_ticket_status_filter.py:12: AssertionError
 ________________ test_closed_filter_returns_only_closed_tickets ________________
 
-service = <ticket_service.TicketService object at 0x7f4d06be54d0>
+service = <ticket_service.TicketService object at 0x7ff93d7a35d0>
 
     def test_closed_filter_returns_only_closed_tickets(service):
         result = service.list_tickets(status="closed")
@@ -48,7 +48,7 @@ E         Use -v to get more diff
 tests/test_ticket_status_filter.py:20: AssertionError
 _______________________ test_invalid_status_is_rejected ________________________
 
-service = <ticket_service.TicketService object at 0x7f4d06bfed10>
+service = <ticket_service.TicketService object at 0x7ff93d806ad0>
 
     def test_invalid_status_is_rejected(service):
 >       with pytest.raises(ValueError, match="unsupported status"):
@@ -60,4 +60,4 @@ FAILED tests/test_ticket_status_filter.py::test_open_filter_limits_items_and_tot
 FAILED tests/test_ticket_status_filter.py::test_filter_applies_before_pagination
 FAILED tests/test_ticket_status_filter.py::test_closed_filter_returns_only_closed_tickets
 FAILED tests/test_ticket_status_filter.py::test_invalid_status_is_rejected - ...
-4 failed in 0.07s
+4 failed in 0.09s

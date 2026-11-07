@@ -115,22 +115,24 @@ FAILED tests/test_ticket_status_filter.py::test_invalid_status_is_rejected
 ### 实际生效的代码差异
 
 ```diff
-@@ -20,7 +20,15 @@
+@@ -20,7 +20,14 @@
          if page_size < 1:
              raise ValueError("page_size must be at least 1")
 -        ordered = sorted(self._tickets, key=lambda ticket: (ticket.created_at, ticket.id), reverse=True)
-+        if status is not None and status not in self.VALID_STATUSES:
-+            raise ValueError(f"unsupported status: {status}")
 +
-+        filtered = (
-+            self._tickets
-+            if status is None
-+            else tuple(ticket for ticket in self._tickets if ticket.status == status)
-+        )
-+        ordered = sorted(filtered, key=lambda ticket: (ticket.created_at, ticket.id), reverse=True)
++        tickets = self._tickets
++        if status is not None:
++            if status not in self.VALID_STATUSES:
++                raise ValueError(f"unsupported status: {status}")
++            tickets = tuple(ticket for ticket in tickets if ticket.status == status)
++
++        ordered = sorted(tickets, key=lambda ticket: (ticket.created_at, ticket.id), reverse=True)
+         start = (page - 1) * page_size
+         items = ordered[start : start + page_size]
+         return {
 ```
 
-（完整 diff 见 `records/minimax/actual-run/applied.diff`，修改前后源码见 `verification/snapshots/`。）
+（完整 diff 见 `records/minimax/actual-run/applied.diff`，修改前后源码见 `verification/snapshots/`。模型每次生成的写法可能不同，此处引用的是本次提交记录中的实际差异。）
 
 ## 六、规格更新后上下文刷新（不能是固定答案）
 

@@ -32,9 +32,9 @@
           "result": "8 passed"
         }
       },
-      "code_sha256": "c53eb91994f61d43d555878ef43e16ff16b652853626eb8f4a60f0cdd1517032",
+      "code_sha256": "fd54ed5f4d453a7749b26ccf5150e2e518abe304443dc1a1906333e0fb4d8d1c",
       "spec_version": 1,
-      "updated_at": "2026-11-07T15:49:22.374208+00:00"
+      "updated_at": "2026-11-07T15:54:32.671064+00:00"
     }
   },
   "reused_context": {
@@ -114,8 +114,8 @@
           "TicketService.__init__",
           "TicketService.list_tickets"
         ],
-        "sha256": "c53eb91994f61d43d555878ef43e16ff16b652853626eb8f4a60f0cdd1517032",
-        "content": "from dataclasses import asdict, dataclass\n\n\n@dataclass(frozen=True)\nclass Ticket:\n    id: int\n    title: str\n    status: str\n    created_at: str\n\n\nclass TicketService:\n    VALID_STATUSES = (\"open\", \"in_progress\", \"resolved\", \"closed\")\n\n    def __init__(self, tickets):\n        self._tickets = tuple(tickets)\n\n    def list_tickets(self, page=1, page_size=20, status=None):\n        if page < 1:\n            raise ValueError(\"page must be at least 1\")\n        if page_size < 1:\n            raise ValueError(\"page_size must be at least 1\")\n        if status is not None and status not in self.VALID_STATUSES:\n            raise ValueError(f\"unsupported status: {status}\")\n\n        filtered = (\n            self._tickets\n            if status is None\n            else tuple(ticket for ticket in self._tickets if ticket.status == status)\n        )\n        ordered = sorted(filtered, key=lambda ticket: (ticket.created_at, ticket.id), reverse=True)\n        start = (page - 1) * page_size\n        items = ordered[start : start + page_size]\n        return {\n            \"items\": [asdict(ticket) for ticket in items],\n            \"page\": page,\n            \"page_size\": page_size,\n            \"total\": len(ordered),\n        }\n",
+        "sha256": "fd54ed5f4d453a7749b26ccf5150e2e518abe304443dc1a1906333e0fb4d8d1c",
+        "content": "from dataclasses import asdict, dataclass\n\n\n@dataclass(frozen=True)\nclass Ticket:\n    id: int\n    title: str\n    status: str\n    created_at: str\n\n\nclass TicketService:\n    VALID_STATUSES = (\"open\", \"in_progress\", \"resolved\", \"closed\")\n\n    def __init__(self, tickets):\n        self._tickets = tuple(tickets)\n\n    def list_tickets(self, page=1, page_size=20, status=None):\n        if page < 1:\n            raise ValueError(\"page must be at least 1\")\n        if page_size < 1:\n            raise ValueError(\"page_size must be at least 1\")\n\n        tickets = self._tickets\n        if status is not None:\n            if status not in self.VALID_STATUSES:\n                raise ValueError(f\"unsupported status: {status}\")\n            tickets = tuple(ticket for ticket in tickets if ticket.status == status)\n\n        ordered = sorted(tickets, key=lambda ticket: (ticket.created_at, ticket.id), reverse=True)\n        start = (page - 1) * page_size\n        items = ordered[start : start + page_size]\n        return {\n            \"items\": [asdict(ticket) for ticket in items],\n            \"page\": page,\n            \"page_size\": page_size,\n            \"total\": len(ordered),\n        }\n",
         "source": "seekdb.code_files/src/ticket_service.py"
       }
     ],
@@ -188,15 +188,15 @@
             "result": "8 passed"
           }
         },
-        "code_sha256": "c53eb91994f61d43d555878ef43e16ff16b652853626eb8f4a60f0cdd1517032",
+        "code_sha256": "fd54ed5f4d453a7749b26ccf5150e2e518abe304443dc1a1906333e0fb4d8d1c",
         "spec_version": 1,
-        "updated_at": "2026-11-07T15:49:22.374208+00:00"
+        "updated_at": "2026-11-07T15:54:32.671064+00:00"
       }
     },
     "provenance": {
       "engine": "pylibseekdb",
       "database": "/mnt/kai_ckp/yiding/WangYuning/seekdb_competition/powercontext-minimax/minimax/.runtime/reproduction.db",
-      "generated_at": "2026-11-07T15:49:31.904664+00:00"
+      "generated_at": "2026-11-07T15:54:38.854616+00:00"
     }
   }
 }
