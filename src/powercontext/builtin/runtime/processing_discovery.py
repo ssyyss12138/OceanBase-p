@@ -48,10 +48,22 @@ async def enabled_profile_scopes(connection: AsyncConnection, scope_ids: tuple[s
 class SourceProcessingPendingProvider:
     """Inspect journal metadata, never Source bodies, prompts, or models."""
 
-    def __init__(self, database: AsyncDatabase, binding_name: str, artifact_family: str) -> None:
+    def __init__(
+        self,
+        database: AsyncDatabase,
+        binding_name: str,
+        artifact_family: str,
+        *,
+        source_count_threshold: int | None = None,
+    ) -> None:
+        if source_count_threshold is not None and (
+            type(source_count_threshold) is not int or source_count_threshold < 1
+        ):
+            raise ValueError("source_count_threshold must be a positive integer")  # noqa: TRY003
         self._database = database
         self._binding = binding_name
         self._family = artifact_family
+        self._source_count_threshold = source_count_threshold
 
     async def reconcile(self, after_scope_id: str | None, limit: int, *, fence: ArtifactProcessingFence) -> str | None:
         heads = SOURCE_JOURNAL_HEADS_TABLE
@@ -67,10 +79,21 @@ class SourceProcessingPendingProvider:
             intents = ArtifactProcessingIntentRepository()
             cursors = SourceCursorRepository()
             for scope, high in rows:
-                cursor = await cursors.load(connection, scope, self._binding)
-                if int(high) <= (0 if cursor is None else cursor.cursor.sequence):
-                    continue
+                # Lock the intent first so a completing Worker cannot advance its
+                # cursor and acknowledgement between the count and request.
                 intent = await intents.load(connection, scope, self._binding, for_update=True)
-                if intent is None or intent.dirty_generation == intent.clean_generation:
-                    await intents.mark_dirty(connection, scope, self._binding)
+                if intent is None:
+                    intent = await intents.mark_dirty(connection, scope, self._binding)
+                cursor = await cursors.load(connection, scope, self._binding)
+                position = 0 if cursor is None else cursor.cursor.sequence
+                if int(high) <= position:
+                    continue
+                if intent.dirty_generation == intent.clean_generation:
+                    intent = await intents.mark_dirty(connection, scope, self._binding)
+                if (
+                    self._source_count_threshold is not None
+                    and int(high) - position >= self._source_count_threshold
+                    and intent.requested_generation <= intent.handled_generation
+                ):
+                    await intents.request(connection, scope, self._binding)
         return str(rows[-1][0]) if len(rows) == limit else None
