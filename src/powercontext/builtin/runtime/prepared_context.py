@@ -210,6 +210,7 @@ class PreparedContextBuilder:
         experience_candidates: Sequence[PreparedExperienceCandidates] = (),
         profile_candidates: Sequence[PreparedProfileCandidate] = (),
         code_candidates: Sequence[PreparedCodeCandidate] = (),
+        memory_pool: Sequence[tuple[str, Sequence[MemoryHit]]] | None = None,
     ) -> PreparedContextBuild:
         if request.include_code:
 
@@ -224,6 +225,7 @@ class PreparedContextBuilder:
                     topic_memory_hits=topic_memory_hits,
                     experience_candidates=experience_candidates,
                     profile_candidates=profile_candidates,
+                    memory_pool=memory_pool,
                 )
 
             return assemble_code(request, code_candidates, self.entry_limit, historical)
@@ -242,6 +244,7 @@ class PreparedContextBuilder:
             experience_candidates=experience_candidates,
             profile_candidates=profile_candidates,
             topic_memory_hits=topic_memory_hits,
+            memory_pool=memory_pool,
         )
         if content is None:
             return PreparedContextBuild(context=self.empty(), origins=(), omissions=omissions)
@@ -265,6 +268,7 @@ class PreparedContextBuilder:
         topic_memory_hits: Sequence[TopicMemorySearchHit] = (),
         experience_candidates: Sequence[PreparedExperienceCandidates] = (),
         profile_candidates: Sequence[PreparedProfileCandidate] = (),
+        memory_pool: Sequence[tuple[str, Sequence[MemoryHit]]] | None = None,
     ) -> RecallBudgetView:
         """Report what the byte budget does to one candidate set, without delivering it.
 
@@ -284,6 +288,7 @@ class PreparedContextBuilder:
             experience_candidates=experience_candidates,
             profile_candidates=profile_candidates,
             topic_memory_hits=topic_memory_hits,
+            memory_pool=memory_pool,
         )
         content_bytes = 0 if content is None else len(content.encode("utf-8"))
         return RecallBudgetView(
@@ -303,6 +308,7 @@ class PreparedContextBuilder:
         topic_memory_hits: Sequence[TopicMemorySearchHit],
         experience_candidates: Sequence[PreparedExperienceCandidates],
         profile_candidates: Sequence[PreparedProfileCandidate],
+        memory_pool: Sequence[tuple[str, Sequence[MemoryHit]]] | None = None,
     ) -> tuple[str | None, tuple[PreparedContextOrigin, ...], PreparedContextOmissions]:
         """Run one complete pure selection pass and render it.
 
@@ -320,18 +326,27 @@ class PreparedContextBuilder:
                 experience_candidates=experience_candidates,
                 profile_candidates=profile_candidates,
                 topic_memory_hits=topic_memory_hits,
+                memory_pool=memory_pool,
             )
 
-        memory_entries = _interleave_groups(
-            tuple(
-                self._memory_entries(
-                    candidates.memory_ref,
-                    candidates.hits,
-                    scope_id=None if candidates.scope_id == current_scope_id else candidates.scope_id or None,
+        if memory_pool is not None:
+            memory_entries = _interleave_groups(
+                tuple(
+                    self._pooled_memory_entries(scope_id, hits, current_scope_id=current_scope_id)
+                    for scope_id, hits in memory_pool
                 )
-                for candidates in memory_candidates
             )
-        )
+        else:
+            memory_entries = _interleave_groups(
+                tuple(
+                    self._memory_entries(
+                        candidates.memory_ref,
+                        candidates.hits,
+                        scope_id=None if candidates.scope_id == current_scope_id else candidates.scope_id or None,
+                    )
+                    for candidates in memory_candidates
+                )
+            )
         topic_memory_entries = self._topic_memory_entries(topic_memory_hits)
         experience_entries = _interleave_groups(
             tuple(
@@ -347,7 +362,7 @@ class PreparedContextBuilder:
             return None, (), omissions
         return _render(entries), tuple(entry.origin for entry in entries), omissions
 
-    def _select_text(
+    def _select_text(  # noqa: C901 - one bounded assembly pass per family section
         self,
         request: PrepareContextRequest,
         *,
@@ -356,6 +371,7 @@ class PreparedContextBuilder:
         experience_candidates: Sequence[PreparedExperienceCandidates],
         profile_candidates: Sequence[PreparedProfileCandidate],
         topic_memory_hits: Sequence[TopicMemorySearchHit],
+        memory_pool: Sequence[tuple[str, Sequence[MemoryHit]]] | None = None,
     ) -> tuple[str | None, tuple[PreparedContextOrigin, ...], PreparedContextOmissions]:
         assembly = request.assembly
         if assembly is None:
@@ -377,20 +393,26 @@ class PreparedContextBuilder:
             elif section.family == "topic-memory":
                 entries = self._topic_memory_entries(topic_memory_hits, scope_id=current_scope_id)
             else:
-                groups = (
-                    tuple(
+                if section.family == "memory" and memory_pool is not None:
+                    groups = tuple(
+                        (self._pooled_memory_entries(scope_id, hits, current_scope_id=scope_id, text=True),)
+                        for scope_id, hits in memory_pool
+                    )
+                else:
+                    groups = (
                         tuple(
-                            self._memory_entries(group.memory_ref, (hit,), scope_id=group.scope_id)
-                            for hit in group.hits
+                            tuple(
+                                self._memory_entries(group.memory_ref, (hit,), scope_id=group.scope_id)
+                                for hit in group.hits
+                            )
+                            for group in memory_candidates
                         )
-                        for group in memory_candidates
+                        if section.family == "memory"
+                        else tuple(
+                            tuple(self._experience_entries((hit,), scope_id=group.scope_id) for hit in group.hits)
+                            for group in experience_candidates
+                        )
                     )
-                    if section.family == "memory"
-                    else tuple(
-                        tuple(self._experience_entries((hit,), scope_id=group.scope_id) for hit in group.hits)
-                        for group in experience_candidates
-                    )
-                )
                 entries = tuple(chain.from_iterable(_interleave_groups(groups)))
             seen: set[tuple[str, str, str, int, str | None, str | None]] = set()
             rank = 0
@@ -498,6 +520,48 @@ class PreparedContextBuilder:
                 )
             )
         return tuple(memory_entries)
+
+    def _pooled_memory_entries(
+        self,
+        scope_id: str,
+        hits: Sequence[MemoryHit],
+        *,
+        current_scope_id: str | None,
+        text: bool = False,
+    ) -> tuple[_PreparedContextEntry, ...]:
+        entries: list[_PreparedContextEntry] = []
+        for hit in hits:
+            if not hit.entry_id.strip() or not hit.entry_version_id.strip() or not hit.text.strip():
+                continue
+            citation = MemoryCitation(
+                memory_ref=hit.memory_ref,
+                entry_id=hit.entry_id,
+                entry_version_id=hit.entry_version_id,
+            )
+            origin: PreparedContextOrigin = citation
+            rendered_citation = citation.model_dump(mode="json")
+            if text or scope_id != current_scope_id:
+                memory = ArtifactAddress(scope_id=scope_id, artifact=hit.memory_ref)
+                origin = MemoryEntryAddress(
+                    memory=memory,
+                    entry_id=hit.entry_id,
+                    entry_version_id=hit.entry_version_id,
+                )
+                rendered_citation = {
+                    "memory": memory.model_dump(mode="json"),
+                    "entry_id": hit.entry_id,
+                    "entry_version_id": hit.entry_version_id,
+                }
+            entries.append(
+                _PreparedContextEntry(
+                    origin=origin,
+                    kind="memory",
+                    citation=rendered_citation,
+                    content=hit.text,
+                    truncated=False,
+                )
+            )
+        return tuple(entries)
 
     def _topic_memory_entries(
         self,

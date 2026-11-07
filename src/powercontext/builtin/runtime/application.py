@@ -902,7 +902,7 @@ class ScopedContextApplication:
                     await self._runtime.statistics.for_scope(self.scope_id).record_recall(measurement)
         return build.context
 
-    async def _prepare_build(
+    async def _prepare_build(  # noqa: C901 - controlled recall expansion plus stable pool merge
         self,
         request: PrepareContextRequest,
         scope: ScopeDescriptor,
@@ -979,6 +979,18 @@ class ScopedContextApplication:
                 topic_reuse=topic_reuse,
                 round_zero=round_zero,
             )
+        memory_pool = None
+        if request.assembly is None and MEMORY_FAMILY in families:
+            memory_pool = self._merge_memory_pool(memory_candidates)
+            if memory_pool:
+                # A frozen first-N set would make the delta tiny without ever
+                # delivering the newly captured Memory.  Let the pooled path
+                # keep appending entries while the caller's byte budget still
+                # bounds the rendered result.
+                builder.entry_limit = max(
+                    builder.entry_limit,
+                    min(32, sum(len(hits) for _scope_id, hits in memory_pool)),
+                )
         code = await self._code_candidates(request) if request.include_code else ()
         with self._runtime._stage(
             "context.build",
@@ -1003,6 +1015,7 @@ class ScopedContextApplication:
                 experience_candidates=experience_candidates,
                 profile_candidates=profile_candidates,
                 code_candidates=code,
+                memory_pool=memory_pool,
             )
             if recall_effort is not None:
                 recall_effort = replace(
@@ -1032,6 +1045,33 @@ class ScopedContextApplication:
                         "powercontext.context.build.recall.dropped_items": recall_effort.dropped_items,
                     })
         return build, recall_effort
+
+    def _merge_memory_pool(
+        self, candidates: Sequence[PreparedMemoryCandidates]
+    ) -> tuple[tuple[str, tuple[MemoryHit, ...]], ...]:
+        """Append newly recalled hits to the per-scope first-seen order.
+
+        The pool deliberately retains the hit object from the round that first
+        observed it, so its citation bytes (including the Memory Revision
+        identity) stay stable across later appends.  The task permits different
+        Memory revisions to have different citation identities; retaining the
+        original one is what makes the prepared bytes monotonically append.
+        """
+
+        pools = self._runtime._context_memory_pool
+        merged: list[tuple[str, tuple[MemoryHit, ...]]] = []
+        for candidate in candidates:
+            scope_id = candidate.scope_id or self.scope_id
+            pool = pools.setdefault(scope_id, [])
+            seen = {(hit.entry_id, hit.entry_version_id) for hit in pool}
+            for hit in candidate.hits:
+                key = (hit.entry_id, hit.entry_version_id)
+                if key in seen:
+                    continue
+                seen.add(key)
+                pool.append(hit)
+            merged.append((scope_id, tuple(pool)))
+        return tuple(merged)
 
     async def _code_candidates(self, request: PrepareContextRequest) -> tuple[PreparedCodeCandidate, ...]:
         try:
@@ -3117,6 +3157,11 @@ class BuiltinRuntime:
         self._closed = False
         self._scheduler: AsyncIOScheduler | None = None
         self._scheduler_runtime_key: str | None = None
+        # First-seen Memory recall pool shared by every short-lived
+        # ScopedContextApplication.  Keeping it on the Runtime is required:
+        # for_scope() creates a fresh application for each round and would
+        # otherwise reset the monotone selection order every request.
+        self._context_memory_pool: dict[str, list[MemoryHit]] = {}
         self.sources = SourceApplication(self)
         self.ingestion = RemoteIngestionApplication(self, remote_ingestion)
         self.code = CodeApplication(self, code_service or CodeService(CodeConfig()))
