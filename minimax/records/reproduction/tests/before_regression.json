@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-11-07T15:49:07.738186+00:00",
+  "command": [
+    "/mnt/kai_ckp/yiding/WangYuning/seekdb_competition/powercontext-minimax/minimax/.venv/bin/python3",
+    "-m",
+    "pytest",
+    "tests/test_ticket_regression.py",
+    "-q"
+  ],
+  "command_display": "/mnt/kai_ckp/yiding/WangYuning/seekdb_competition/powercontext-minimax/minimax/.venv/bin/python3 -m pytest tests/test_ticket_regression.py -q",
+  "cwd": "/mnt/kai_ckp/yiding/WangYuning/seekdb_competition/powercontext-minimax/minimax/sample_project",
+  "exit_code": 0,
+  "suite": "regression",
+  "git_commit": "d647275c308e09b7b623f322a26f5c4e85734fb0",
+  "source_sha256": {
+    "src/ticket_service.py": "4c648d2fdad05ffa8945a1d621c6d2b563dc9c0404beec990432b9abcd0256c2",
+    "tests/test_ticket_status_filter.py": "aa1246cd64e79cf25e91a6ef20ed19f693f76f1c5daa98c7c87a810ac8ab0b78",
+    "tests/test_ticket_regression.py": "7d082fe213007459284cfb5f8c8c25739c8b56bc71fcfe30097304016347c962"
+  }
+}

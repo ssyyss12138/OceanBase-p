@@ -1,0 +1,30 @@
+{
+  "spec_id": "SPEC-TICKET-001",
+  "version": 2,
+  "task_id": "TASK-TICKET-STATUS",
+  "title": "工单列表状态筛选规格（大小写澄清）",
+  "requirements": [
+    {
+      "id": "REQ-FILTER-001",
+      "text": "list_tickets 接受可选 status，按 open、in_progress、resolved、closed 精确匹配。"
+    },
+    {
+      "id": "REQ-FILTER-002",
+      "text": "先筛选再分页，返回 total 为筛选后的总数。"
+    },
+    {
+      "id": "REQ-FILTER-003",
+      "text": "其他 status 值抛出 ValueError，错误消息包含 unsupported status。"
+    },
+    {
+      "id": "REQ-FILTER-004",
+      "text": "状态匹配区分大小写；OPEN 不属于有效状态，必须按非法值拒绝。"
+    }
+  ],
+  "compatibility": [
+    {
+      "id": "REQ-COMPAT-001",
+      "text": "status 缺省或为 None 时，原有默认列表、排序、分页、total 和响应结构不变。"
+    }
+  ]
+}
