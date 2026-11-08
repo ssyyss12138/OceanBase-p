@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-11-08T04:33:55.859Z",
+  "mode": "embedded",
+  "runtime": "Node v24.14.0 / linux-arm64",
+  "dimension": 512,
+  "docs": 200,
+  "insert": {
+    "ms": 2517,
+    "docsPerSecond": 79.5
+  },
+  "search": {
+    "queries": 100,
+    "p50Ms": 7.69,
+    "p90Ms": 8.75,
+    "meanMs": 7.76
+  }
+}

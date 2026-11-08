@@ -1,0 +1,32 @@
+{
+  "endpoint": "https://hf-mirror.com",
+  "rows": [
+    {
+      "model": "Xenova/bge-small-zh-v1.5",
+      "sizes": {
+        "FP32": 94851877,
+        "INT8": 24010842,
+        "FP16": 47497427
+      },
+      "compression": 3.95
+    },
+    {
+      "model": "Xenova/all-MiniLM-L6-v2",
+      "sizes": {
+        "FP32": 90387606,
+        "INT8": 22972370,
+        "FP16": 45297825
+      },
+      "compression": 3.93
+    },
+    {
+      "model": "Xenova/paraphrase-multilingual-MiniLM-L12-v2",
+      "sizes": {
+        "FP32": 470268510,
+        "INT8": 118308126,
+        "FP16": 235336673
+      },
+      "compression": 3.97
+    }
+  ]
+}

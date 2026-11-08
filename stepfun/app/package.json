@@ -1,0 +1,33 @@
+{
+  "name": "seekdb-ondevice-kb",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Browser-side embedding + seekdb hybrid retrieval mini knowledge base",
+  "type": "module",
+  "scripts": {
+    "postinstall": "node scripts/copy-ort.mjs",
+    "dev": "node server/index.mjs",
+    "build": "vite build",
+    "start": "node server/index.mjs --prod",
+    "eval:quality": "node scripts/eval_quality.mjs",
+    "eval:sizes": "node scripts/model_sizes.mjs",
+    "bench:seekdb": "node scripts/bench_seekdb.mjs"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "^3.7.6",
+    "express": "^4.21.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "seekdb": "1.4.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,12 @@
+{"query":"浏览器里怎么用 WebGPU 跑模型","relevant":["d05","d06","d17"]}
+{"query":"INT8 量化后模型体积能小多少","relevant":["d07","d15"]}
+{"query":"中文端侧 embedding 模型推荐","relevant":["d08"]}
+{"query":"混合检索怎么融合全文和向量结果","relevant":["d04","d11"]}
+{"query":"HNSW 索引查询参数怎么调","relevant":["d03"]}
+{"query":"增量导入新文档后检索不到怎么办","relevant":["d12","d23"]}
+{"query":"文档切块大小怎么选","relevant":["d09"]}
+{"query":"WebGPU 不可用时怎么降级","relevant":["d06","d17"]}
+{"query":"如何评测检索质量 Recall@K","relevant":["d16"]}
+{"query":"seekdb-js 如何连接嵌入式数据库","relevant":["d21"]}
+{"query":"批处理为什么能提升吞吐","relevant":["d13"]}
+{"query":"查询向量和文档向量要用同一个模型吗","relevant":["d20"]}

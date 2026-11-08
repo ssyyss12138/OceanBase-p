@@ -1,0 +1,30 @@
+{
+  "generatedAt": "2026-11-08T13:12:54+08:00",
+  "environment": {
+    "browser": "Chromium 158 headless",
+    "platform": "Linux aarch64",
+    "gpu": "none (WASM backend)",
+    "modelSource": "local static files (Q8)",
+    "corpusDocs": 24,
+    "benchmarkQueries": 36
+  },
+  "modelLoadMs": 1630,
+  "import": {
+    "chunks": 24,
+    "embedMs": 1277,
+    "seekdbWriteMs": 331
+  },
+  "queryEmbedding": {
+    "p50Ms": 19,
+    "p90Ms": 22
+  },
+  "seekdbHybridSearch": {
+    "p50Ms": 7,
+    "p90Ms": 8,
+    "firstQueryAfterImportMs": 3037
+  },
+  "endToEnd": {
+    "p50Ms": 31,
+    "p90Ms": 34
+  }
+}

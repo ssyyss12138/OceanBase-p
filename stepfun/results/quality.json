@@ -1,0 +1,28 @@
+{
+  "model": "Xenova/bge-small-zh-v1.5",
+  "generatedAt": "2026-11-08T04:34:56.294Z",
+  "precisions": {
+    "fp32": {
+      "recallAtK": 0.9306,
+      "mrrAtK": 1,
+      "k": 3,
+      "queries": 12,
+      "docs": 24,
+      "elapsedMs": 6086,
+      "dim": 512
+    },
+    "q8": {
+      "recallAtK": 0.9028,
+      "mrrAtK": 1,
+      "k": 3,
+      "queries": 12,
+      "docs": 24,
+      "elapsedMs": 2543,
+      "dim": 512
+    }
+  },
+  "qualityDelta": {
+    "recallAtK": -0.0278,
+    "mrrAtK": 0
+  }
+}
