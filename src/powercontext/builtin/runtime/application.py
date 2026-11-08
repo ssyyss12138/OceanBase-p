@@ -861,7 +861,7 @@ class ScopedContextApplication:
         if base_pack is not None and not isinstance(base_pack, ContextPack):
             raise ContextPackError("base_pack must be a ContextPack")  # noqa: TRY003
         prepared = await self.prepare(request, authorize_scopes=authorize_scopes)
-        target = ContextPack.from_content("" if prepared.content is None else prepared.content, chunk_bytes=128)
+        target = ContextPack.from_content("" if prepared.content is None else prepared.content, chunk_bytes=512)
         if base_pack is None:
             return target
         return ContextPackDelta.between(base_pack, target)
