@@ -44,7 +44,7 @@ class ContextPack:
     byte_count: int
 
     @classmethod
-    def build(cls, items: tuple[bytes, ...], /) -> ContextPack:
+    def build(cls, items: tuple[bytes, ...]) -> ContextPack:
         """Build a validated pack and its canonical digest and wire byte count."""
 
         validated = _validate_items(items)
@@ -54,7 +54,9 @@ class ContextPack:
         return cls(items=validated, digest=digest, byte_count=byte_count)
 
     @classmethod
-    def from_content(cls, content: str | bytes, *, chunk_bytes: int = 512) -> ContextPack:
+    def from_content(  # noqa: C901 - line and character boundary handling
+        cls, content: str | bytes, *, chunk_bytes: int = 512
+    ) -> ContextPack:
         """Deterministically split content without crossing UTF-8 character boundaries."""
 
         if type(chunk_bytes) is not int or chunk_bytes <= 0:
@@ -71,17 +73,36 @@ class ContextPack:
 
         chunks: list[bytes] = []
         current = bytearray()
-        for character in text:
-            try:
-                encoded = character.encode("utf-8")
-            except UnicodeEncodeError as error:
-                raise ContextPackError("content must be valid UTF-8") from error
-            if len(encoded) > chunk_bytes:
-                raise ContextPackError("chunk limit cannot contain one UTF-8 character")
-            if current and len(current) + len(encoded) > chunk_bytes:
-                chunks.append(bytes(current))
-                current.clear()
-            current.extend(encoded)
+
+        def append_text(value: str) -> None:
+            nonlocal current
+            for character in value:
+                try:
+                    encoded = character.encode("utf-8")
+                except UnicodeEncodeError as error:
+                    raise ContextPackError("content must be valid UTF-8") from error
+                if len(encoded) > chunk_bytes:
+                    raise ContextPackError("chunk limit cannot contain one UTF-8 character")
+                if current and len(current) + len(encoded) > chunk_bytes:
+                    chunks.append(bytes(current))
+                    current.clear()
+                current.extend(encoded)
+
+        # Lines are stable anchors: appending a conversation turn changes only
+        # the final line, so earlier chunks remain reusable even when a fixed
+        # byte boundary would have shifted.
+        for line in text.splitlines(keepends=True):
+            encoded_line = line.encode("utf-8")
+            if len(encoded_line) <= chunk_bytes:
+                if current and len(current) + len(encoded_line) > chunk_bytes:
+                    chunks.append(bytes(current))
+                    current.clear()
+                current.extend(encoded_line)
+            else:
+                if current:
+                    chunks.append(bytes(current))
+                    current.clear()
+                append_text(line)
         if current:
             chunks.append(bytes(current))
         return cls.build(tuple(chunks))
@@ -99,7 +120,7 @@ class ContextPack:
         return payload
 
     @classmethod
-    def from_bytes(cls, value: bytes, /) -> ContextPack:
+    def from_bytes(cls, value: bytes) -> ContextPack:
         """Decode and fully validate one canonical serialized pack."""
 
         payload = _decode_json_object(value)
@@ -133,7 +154,7 @@ class ContextPackDelta:
     appended: tuple[bytes, ...]
 
     @classmethod
-    def between(cls, base: ContextPack, target: ContextPack, /) -> ContextPackDelta:
+    def between(cls, base: ContextPack, target: ContextPack) -> ContextPackDelta:
         """Build a delta using the longest identical item prefix."""
 
         _require_pack(base)
@@ -173,7 +194,7 @@ class ContextPackDelta:
         })
 
     @classmethod
-    def from_bytes(cls, value: bytes, /) -> ContextPackDelta:
+    def from_bytes(cls, value: bytes) -> ContextPackDelta:
         """Decode and validate one canonical serialized delta."""
 
         payload = _decode_json_object(value)
@@ -198,7 +219,7 @@ class ContextPackDelta:
         return delta
 
 
-def apply_context_pack_delta(base: ContextPack, delta: ContextPackDelta, /) -> ContextPack:
+def apply_context_pack_delta(base: ContextPack, delta: ContextPackDelta) -> ContextPack:
     """Validate and apply a serialized-independent delta to its exact base pack."""
 
     _require_pack(base)
