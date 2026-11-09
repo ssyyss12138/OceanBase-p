@@ -92,7 +92,10 @@ class ContextPack:
         # the final line, so earlier chunks remain reusable even when a fixed
         # byte boundary would have shifted.
         for line in text.splitlines(keepends=True):
-            encoded_line = line.encode("utf-8")
+            try:
+                encoded_line = line.encode("utf-8")
+            except UnicodeEncodeError as error:
+                raise ContextPackError("content must be valid UTF-8") from error
             if len(encoded_line) <= chunk_bytes:
                 if current and len(current) + len(encoded_line) > chunk_bytes:
                     chunks.append(bytes(current))

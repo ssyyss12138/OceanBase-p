@@ -1,0 +1,152 @@
+{
+  "source": "Yale-LILY/QMSum@83d7768c1f2b4dfeb091385d3dc7e239b8e5bb7e:data/ALL/test/ES2004a.json",
+  "original_turn_indices": [
+    14,
+    184,
+    186,
+    195,
+    203,
+    225,
+    237,
+    268,
+    309
+  ],
+  "turns": [
+    "Project Manager: Um I'm Sarah , the Project Manager and this is our first meeting , surprisingly enough . Okay , this is our agenda , um {vocalsound} we will do some stuff , get to know each other a bit better to feel more comfortable with each other . Um then we'll go do tool training , talk about the project plan , discuss our own ideas and everything um and we've got twenty five minutes to do that , as far as I can understand . Now , we're developing a remote control which you probably already know . Um , we want it to be original , something that's uh {disfmarker} people haven't thought of , that's not out in the shops , um , trendy , appealing to a wide market , but you know , not a hunk of metal , and user-friendly , grannies to kids , maybe even pooches should be able to use it . Okay , um , first is the functional design , um this is where we all go off and do our individual work , um what needs need to be fulfilled by the product , um what effects the product has to have and how it's actually going to do that . Um , conceptual design , what we're thinking , how it's gonna go and then the detailed design , how we're actually gonna put it into practice and make it work .",
+    "Project Manager: Okay . What are your experiences with remote controls ? I mean I've got {disfmarker} we got um {disfmarker} we had three videos , a T_V_ and a sort of amp thing all set up",
+    "Project Manager: so we got one of the universal remote controls , um that you programme each of your things into ,",
+    "Project Manager: but that was quite good , the fact that you could {disfmarker} You didn't have six remote controls sitting in front of you .",
+    "Marketing: My experience has only been being given the remote control with the object I buy , not doing any tampering with it and programming , using it to programme T_V_ and uh uh videos and things . But basically on , off , volume up and down , channel one , two , th that basic functions ,",
+    "Marketing: I wonder if incorporating that into the design of a remote control might be useful ,",
+    "Marketing: Mm-hmm . Mm-hmm . Can he programme his remote control or is it basic with that too ?",
+    "Marketing: {vocalsound} Yeah . Mm-hmm . Mm . The other thing is , just ch chucking into mobile phone f design features again , it could have a flip top remote control so that when you flip over the top , your screen is {disfmarker} you can have a bigger screen in the the flip over .",
+    "Project Manager: it would probably . I mean there's Sky remote controls and everything . They're kind of moulded and look a bit different , and the Telewest remote controls are silver plastic , which looks a bit smarter ,"
+  ],
+  "initial_turns": 8,
+  "max_bytes": 8000,
+  "rounds": [
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote",
+      "append": [
+        8
+      ]
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "remote"
+    },
+    {
+      "query": "controls"
+    },
+    {
+      "query": "controls"
+    },
+    {
+      "query": "controls"
+    },
+    {
+      "query": "controls"
+    },
+    {
+      "query": "controls"
+    },
+    {
+      "query": "controls"
+    },
+    {
+      "query": "controls"
+    },
+    {
+      "query": "controls"
+    },
+    {
+      "query": "controls"
+    },
+    {
+      "query": "controls"
+    },
+    {
+      "query": "programme"
+    },
+    {
+      "query": "programme"
+    },
+    {
+      "query": "programme"
+    },
+    {
+      "query": "programme"
+    },
+    {
+      "query": "programme"
+    },
+    {
+      "query": "programme"
+    },
+    {
+      "query": "programme"
+    },
+    {
+      "query": "programme"
+    },
+    {
+      "query": "programme"
+    },
+    {
+      "query": "programme"
+    }
+  ]
+}

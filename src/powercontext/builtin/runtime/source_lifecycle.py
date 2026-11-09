@@ -331,10 +331,6 @@ class ScopedSourceLifecycle:
         }
         if not targets:
             return
-        # A default (non-assembly) Context prepare caches the first-seen Memory
-        # hits on the Runtime.  Eligibility may have changed, so rebuild that
-        # selection from the native active head on the next prepare.
-        self._runtime._context_memory_pool.pop(self.scope_id, None)
         async with (
             self._runtime._context(self.scope_id) as context,
             self._runtime._locked(self.scope_id),
