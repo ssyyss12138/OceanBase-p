@@ -1,0 +1,22 @@
+{
+  "task_id": "TASK-TICKET-STATUS",
+  "title": "工单列表增加状态筛选",
+  "goal": "为 TicketService.list_tickets 增加可选 status 精确筛选，并在筛选后分页。",
+  "spec_ids": ["SPEC-TICKET-001"],
+  "code_files": ["src/ticket_service.py"],
+  "test_files": [
+    "tests/test_ticket_status_filter.py",
+    "tests/test_ticket_regression.py",
+    "tests/conftest.py"
+  ],
+  "target_tests": ["tests/test_ticket_status_filter.py"],
+  "regression_tests": ["tests/test_ticket_regression.py"],
+  "allowed_write_paths": ["src/ticket_service.py"],
+  "must_preserve": [
+    "未传 status 时返回全部工单",
+    "created_at 降序，同 created_at 时 id 降序",
+    "筛选后再执行 1 基分页，total 是筛选后的总数",
+    "响应字段及工单字段保持不变",
+    "原有非法分页参数校验保持不变"
+  ]
+}

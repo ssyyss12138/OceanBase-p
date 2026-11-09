@@ -1,0 +1,26 @@
+{
+  "task_id": "TASK-TICKET-STATUS",
+  "status": "in_progress",
+  "completed": [
+    "导入规格、代码和测试",
+    "构造数据库上下文",
+    "执行修改前测试"
+  ],
+  "todo": [
+    "调用 MiniMax 修改代码",
+    "执行修改后目标与回归测试"
+  ],
+  "validation": {
+    "before_target": {
+      "exit_code": 1,
+      "result": "4 failed"
+    },
+    "before_regression": {
+      "exit_code": 0,
+      "result": "8 passed"
+    }
+  },
+  "code_sha256": "4c648d2fdad05ffa8945a1d621c6d2b563dc9c0404beec990432b9abcd0256c2",
+  "spec_version": 1,
+  "updated_at": "2026-11-07T15:55:06.695075+00:00"
+}

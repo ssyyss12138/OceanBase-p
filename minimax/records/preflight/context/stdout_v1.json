@@ -1,0 +1,126 @@
+{
+  "task": {
+    "task_id": "TASK-TICKET-STATUS",
+    "title": "工单列表增加状态筛选",
+    "goal": "为 TicketService.list_tickets 增加可选 status 精确筛选，并在筛选后分页。",
+    "spec_ids": [
+      "SPEC-TICKET-001"
+    ],
+    "code_files": [
+      "src/ticket_service.py"
+    ],
+    "test_files": [
+      "tests/test_ticket_status_filter.py",
+      "tests/test_ticket_regression.py",
+      "tests/conftest.py"
+    ],
+    "target_tests": [
+      "tests/test_ticket_status_filter.py"
+    ],
+    "regression_tests": [
+      "tests/test_ticket_regression.py"
+    ],
+    "allowed_write_paths": [
+      "src/ticket_service.py"
+    ],
+    "must_preserve": [
+      "未传 status 时返回全部工单",
+      "created_at 降序，同 created_at 时 id 降序",
+      "筛选后再执行 1 基分页，total 是筛选后的总数",
+      "响应字段及工单字段保持不变",
+      "原有非法分页参数校验保持不变"
+    ]
+  },
+  "specifications": [
+    {
+      "spec_id": "SPEC-TICKET-001",
+      "version": 1,
+      "title": "工单列表状态筛选规格",
+      "content": {
+        "spec_id": "SPEC-TICKET-001",
+        "version": 1,
+        "task_id": "TASK-TICKET-STATUS",
+        "title": "工单列表状态筛选规格",
+        "requirements": [
+          {
+            "id": "REQ-FILTER-001",
+            "text": "list_tickets 接受可选 status，按 open、in_progress、resolved、closed 精确匹配。"
+          },
+          {
+            "id": "REQ-FILTER-002",
+            "text": "先筛选再分页，返回 total 为筛选后的总数。"
+          },
+          {
+            "id": "REQ-FILTER-003",
+            "text": "其他 status 值抛出 ValueError，错误消息包含 unsupported status。"
+          }
+        ],
+        "compatibility": [
+          {
+            "id": "REQ-COMPAT-001",
+            "text": "status 缺省或为 None 时，原有默认列表、排序、分页、total 和响应结构不变。"
+          }
+        ]
+      },
+      "sha256": "c7ae3973fd09059189b789f13c389bf44e2a1f3a4778d0f28fc2f6bcbb6620d0",
+      "source": "seekdb.specifications/SPEC-TICKET-001/v1"
+    }
+  ],
+  "code": [
+    {
+      "file_path": "src/ticket_service.py",
+      "symbols": [
+        "Ticket",
+        "TicketService",
+        "TicketService.__init__",
+        "TicketService.list_tickets"
+      ],
+      "sha256": "4c648d2fdad05ffa8945a1d621c6d2b563dc9c0404beec990432b9abcd0256c2",
+      "content": "from dataclasses import asdict, dataclass\n\n\n@dataclass(frozen=True)\nclass Ticket:\n    id: int\n    title: str\n    status: str\n    created_at: str\n\n\nclass TicketService:\n    VALID_STATUSES = (\"open\", \"in_progress\", \"resolved\", \"closed\")\n\n    def __init__(self, tickets):\n        self._tickets = tuple(tickets)\n\n    def list_tickets(self, page=1, page_size=20, status=None):\n        if page < 1:\n            raise ValueError(\"page must be at least 1\")\n        if page_size < 1:\n            raise ValueError(\"page_size must be at least 1\")\n        ordered = sorted(self._tickets, key=lambda ticket: (ticket.created_at, ticket.id), reverse=True)\n        start = (page - 1) * page_size\n        items = ordered[start : start + page_size]\n        return {\n            \"items\": [asdict(ticket) for ticket in items],\n            \"page\": page,\n            \"page_size\": page_size,\n            \"total\": len(ordered),\n        }\n",
+      "source": "seekdb.code_files/src/ticket_service.py"
+    }
+  ],
+  "tests": [
+    {
+      "file_path": "tests/conftest.py",
+      "test_type": "support",
+      "test_names": [],
+      "sha256": "bc8860b69d9c860937c3f00551864658a8b45a94cec799babb239a1f5127a1ef",
+      "content": "import pytest\n\nfrom ticket_service import Ticket, TicketService\n\n\n@pytest.fixture\ndef service():\n    return TicketService(\n        [\n            Ticket(1, \"first\", \"open\", \"2026-01-01T09:00:00Z\"),\n            Ticket(2, \"second\", \"closed\", \"2026-01-03T09:00:00Z\"),\n            Ticket(3, \"third\", \"in_progress\", \"2026-01-02T09:00:00Z\"),\n            Ticket(4, \"fourth\", \"open\", \"2026-01-05T09:00:00Z\"),\n            Ticket(5, \"fifth\", \"resolved\", \"2026-01-04T09:00:00Z\"),\n            Ticket(6, \"sixth\", \"open\", \"2026-01-05T09:00:00Z\"),\n        ]\n    )\n",
+      "source": "seekdb.test_files/tests/conftest.py"
+    },
+    {
+      "file_path": "tests/test_ticket_regression.py",
+      "test_type": "regression",
+      "test_names": [
+        "test_default_list_preserves_order_and_total",
+        "test_default_pagination_is_unchanged",
+        "test_response_schema_is_unchanged",
+        "test_explicit_none_status_matches_default",
+        "test_invalid_pagination_is_still_rejected"
+      ],
+      "sha256": "7d082fe213007459284cfb5f8c8c25739c8b56bc71fcfe30097304016347c962",
+      "content": "import pytest\n\n\ndef test_default_list_preserves_order_and_total(service):\n    result = service.list_tickets()\n    assert [item[\"id\"] for item in result[\"items\"]] == [6, 4, 5, 2, 3, 1]\n    assert result[\"total\"] == 6\n\n\ndef test_default_pagination_is_unchanged(service):\n    result = service.list_tickets(page=2, page_size=2)\n    assert [item[\"id\"] for item in result[\"items\"]] == [5, 2]\n    assert result[\"page\"] == 2\n    assert result[\"page_size\"] == 2\n    assert result[\"total\"] == 6\n\n\ndef test_response_schema_is_unchanged(service):\n    result = service.list_tickets()\n    assert set(result) == {\"items\", \"page\", \"page_size\", \"total\"}\n    assert set(result[\"items\"][0]) == {\"id\", \"title\", \"status\", \"created_at\"}\n\n\ndef test_explicit_none_status_matches_default(service):\n    assert service.list_tickets(status=None) == service.list_tickets()\n\n\n@pytest.mark.parametrize(\"page,page_size\", [(0, 20), (1, 0), (-1, 20), (1, -1)])\ndef test_invalid_pagination_is_still_rejected(service, page, page_size):\n    with pytest.raises(ValueError):\n        service.list_tickets(page=page, page_size=page_size)\n",
+      "source": "seekdb.test_files/tests/test_ticket_regression.py"
+    },
+    {
+      "file_path": "tests/test_ticket_status_filter.py",
+      "test_type": "target",
+      "test_names": [
+        "test_open_filter_limits_items_and_total",
+        "test_filter_applies_before_pagination",
+        "test_closed_filter_returns_only_closed_tickets",
+        "test_invalid_status_is_rejected"
+      ],
+      "sha256": "aa1246cd64e79cf25e91a6ef20ed19f693f76f1c5daa98c7c87a810ac8ab0b78",
+      "content": "import pytest\n\n\ndef test_open_filter_limits_items_and_total(service):\n    result = service.list_tickets(status=\"open\")\n    assert [item[\"id\"] for item in result[\"items\"]] == [6, 4, 1]\n    assert result[\"total\"] == 3\n\n\ndef test_filter_applies_before_pagination(service):\n    result = service.list_tickets(status=\"open\", page=3, page_size=1)\n    assert [item[\"id\"] for item in result[\"items\"]] == [1]\n    assert result[\"page\"] == 3\n    assert result[\"page_size\"] == 1\n    assert result[\"total\"] == 3\n\n\ndef test_closed_filter_returns_only_closed_tickets(service):\n    result = service.list_tickets(status=\"closed\")\n    assert [item[\"id\"] for item in result[\"items\"]] == [2]\n    assert result[\"total\"] == 1\n\n\ndef test_invalid_status_is_rejected(service):\n    with pytest.raises(ValueError, match=\"unsupported status\"):\n        service.list_tickets(status=\"deleted\")\n",
+      "source": "seekdb.test_files/tests/test_ticket_status_filter.py"
+    }
+  ],
+  "prior_state": null,
+  "provenance": {
+    "engine": "pylibseekdb",
+    "database": "/mnt/kai_ckp/yiding/WangYuning/seekdb_competition/powercontext-minimax/minimax/.runtime/preflight.db",
+    "generated_at": "2026-11-07T15:55:03.912630+00:00"
+  }
+}

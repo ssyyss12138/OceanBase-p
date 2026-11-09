@@ -1,0 +1,38 @@
+{
+  "id": "073e7ca62e5a302dd9e5872e291f5b9c",
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "message": {
+        "content": "<think>We need answer exactly one JSON object, no markdown. Need modify only allowed src/ticket_service.py, output complete file content. Need satisfy. Need reason subtleties. Implement optional status exact allowed statuses; invalid including perhaps non-string? Requirement other status values ValueError message contains unsupported status. status None default no filter. Validation ordering relative pagination? Must preserve illegal pagination validation. Could validate page first then status likely. Need perhaps status validation before pagination? Tests only pagination default and invalid status. Keep original behavior. Existing list signature already status=None oddly unused. Implement.\n\nNeed output JSON valid escaping newlines. summary short Chinese. changes array one file_path content complete file. Could include code:\n\nfrom dataclasses...\n...\n    def list_tickets(...):\n        if page &lt;1...\n        ...\n        tickets = self._tickets\n        if status is not None:\n            if status not in self.VALID_STATUSES:\n                raise ValueError(f\"unsupported status: {status}\")\n            tickets = tuple(ticket for ticket in tickets if ticket.status == status)\n        ordered=sorted(tickets...)\n...\n\nPotential membership on unhashable status like list: `status not in tuple` works equality, no hash. Fine. status = \"\" invalid. Exact matching. What if status True? True not in strings =&gt; invalid. Fine.\n\n\"先筛选再分页\" yes. Sorting filtered. default unchanged. Error message lowercase exact \"unsupported status\". Ensure ValueError message includes phrase. Good.\n\nCould perhaps validate status prior pagination? Requirements don't dictate. Preserve original invalid pagination validation means same errors. If both invalid, currently pagination error; status new behavior could be either. We should validate pagination first preserving. Yes.\n\nOnly file. Need ensure JSON output no hidden.</think>\n\n{\"summary\":\"为工单列表增加可选状态精确筛选：校验状态、筛选后排序并分页，total 返回筛选后的总数；默认行为保持不变。\",\"changes\":[{\"file_path\":\"src/ticket_service.py\",\"content\":\"from dataclasses import asdict, dataclass\\n\\n\\n@dataclass(frozen=True)\\nclass Ticket:\\n    id: int\\n    title: str\\n    status: str\\n    created_at: str\\n\\n\\nclass TicketService:\\n    VALID_STATUSES = (\\\"open\\\", \\\"in_progress\\\", \\\"resolved\\\", \\\"closed\\\")\\n\\n    def __init__(self, tickets):\\n        self._tickets = tuple(tickets)\\n\\n    def list_tickets(self, page=1, page_size=20, status=None):\\n        if page < 1:\\n            raise ValueError(\\\"page must be at least 1\\\")\\n        if page_size < 1:\\n            raise ValueError(\\\"page_size must be at least 1\\\")\\n\\n        tickets = self._tickets\\n        if status is not None:\\n            if status not in self.VALID_STATUSES:\\n                raise ValueError(f\\\"unsupported status: {status}\\\")\\n            tickets = tuple(ticket for ticket in tickets if ticket.status == status)\\n\\n        ordered = sorted(tickets, key=lambda ticket: (ticket.created_at, ticket.id), reverse=True)\\n        start = (page - 1) * page_size\\n        items = ordered[start : start + page_size]\\n        return {\\n            \\\"items\\\": [asdict(ticket) for ticket in items],\\n            \\\"page\\\": page,\\n            \\\"page_size\\\": page_size,\\n            \\\"total\\\": len(ordered),\\n        }\\n\"}]}",
+        "role": "assistant"
+      }
+    }
+  ],
+  "created": 1794066854,
+  "model": "MiniMax-M3",
+  "object": "chat.completion",
+  "usage": {
+    "total_tokens": 3358,
+    "total_characters": 0,
+    "prompt_tokens": 2615,
+    "completion_tokens": 743,
+    "completion_tokens_details": {
+      "reasoning_tokens": 362
+    },
+    "prompt_tokens_details": {
+      "cached_tokens": 128
+    }
+  },
+  "input_sensitive": false,
+  "output_sensitive": false,
+  "input_sensitive_type": 0,
+  "output_sensitive_type": 0,
+  "output_sensitive_int": 0,
+  "service_tier": "standard",
+  "base_resp": {
+    "status_code": 0,
+    "status_msg": ""
+  }
+}

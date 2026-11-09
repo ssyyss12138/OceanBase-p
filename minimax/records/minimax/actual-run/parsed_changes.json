@@ -1,0 +1,9 @@
+{
+  "summary": "为工单列表增加可选状态精确筛选：校验状态、筛选后排序并分页，total 返回筛选后的总数；默认行为保持不变。",
+  "changes": [
+    {
+      "file_path": "src/ticket_service.py",
+      "content": "from dataclasses import asdict, dataclass\n\n\n@dataclass(frozen=True)\nclass Ticket:\n    id: int\n    title: str\n    status: str\n    created_at: str\n\n\nclass TicketService:\n    VALID_STATUSES = (\"open\", \"in_progress\", \"resolved\", \"closed\")\n\n    def __init__(self, tickets):\n        self._tickets = tuple(tickets)\n\n    def list_tickets(self, page=1, page_size=20, status=None):\n        if page < 1:\n            raise ValueError(\"page must be at least 1\")\n        if page_size < 1:\n            raise ValueError(\"page_size must be at least 1\")\n\n        tickets = self._tickets\n        if status is not None:\n            if status not in self.VALID_STATUSES:\n                raise ValueError(f\"unsupported status: {status}\")\n            tickets = tuple(ticket for ticket in tickets if ticket.status == status)\n\n        ordered = sorted(tickets, key=lambda ticket: (ticket.created_at, ticket.id), reverse=True)\n        start = (page - 1) * page_size\n        items = ordered[start : start + page_size]\n        return {\n            \"items\": [asdict(ticket) for ticket in items],\n            \"page\": page,\n            \"page_size\": page_size,\n            \"total\": len(ordered),\n        }\n"
+    }
+  ]
+}
