@@ -1,0 +1,5 @@
+# PaperTrail 依赖清单(Python 3.11+)
+pyseekdb==1.4.0.post1
+pylibseekdb==1.4.0.post2
+fastapi==0.162.2
+uvicorn==0.54.0

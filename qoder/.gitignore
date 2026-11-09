@@ -1,0 +1,13 @@
+# Python 虚拟环境
+.venv/
+venv/
+
+# 运行时数据(seekdb 数据库文件,不得提交)
+data/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+
+# 系统文件
+.DS_Store

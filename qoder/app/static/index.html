@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PaperTrail · 科研文献检索工作台</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="layout">
+    <!-- 左侧导航 -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">P</div>
+        <div>
+          <div class="brand-name">PaperTrail</div>
+          <div class="brand-sub">科研文献检索工作台</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#" class="nav-item active" data-view="library">
+          <span class="nav-icon">📚</span>文献库
+        </a>
+        <a href="#" class="nav-item" data-view="recent">
+          <span class="nav-icon">🕘</span>最近添加
+        </a>
+        <a href="#" class="nav-item" data-view="about">
+          <span class="nav-icon">ℹ️</span>使用说明
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="db-status" id="db-status">seekdb 连接中…</div>
+        <div class="db-hint">数据由 seekdb 嵌入式模式持久化</div>
+      </div>
+    </aside>
+
+    <!-- 主区域 -->
+    <main class="main">
+      <header class="topbar">
+        <h1 class="page-title" id="page-title">文献库</h1>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" id="btn-init">初始化演示数据</button>
+          <button class="btn btn-primary" id="btn-add">＋ 添加文献</button>
+        </div>
+      </header>
+
+      <!-- 统计卡片 -->
+      <section class="stats-row" id="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">文献总数</div>
+          <div class="stat-value" id="stat-total">–</div>
+          <div class="stat-sub">全部馆藏</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">已读</div>
+          <div class="stat-value stat-green" id="stat-read">–</div>
+          <div class="stat-sub">已完成阅读</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">未读</div>
+          <div class="stat-value stat-blue" id="stat-unread">–</div>
+          <div class="stat-sub">待阅读文献</div>
+        </div>
+      </section>
+
+      <!-- 检索栏(文献库视图) -->
+      <section class="search-panel" id="search-panel">
+        <input
+          type="text"
+          class="search-input"
+          id="search-input"
+          placeholder="输入关键词检索标题、摘要或笔记…（例如：分布式、Transformer）"
+        />
+        <select class="search-status" id="search-status">
+          <option value="">全部状态</option>
+          <option value="unread">未读</option>
+          <option value="read">已读</option>
+        </select>
+        <button class="btn btn-primary" id="btn-search">搜索</button>
+        <button class="btn btn-ghost" id="btn-reset">重置</button>
+      </section>
+
+      <!-- 文献列表 -->
+      <section class="paper-section" id="paper-section">
+        <div class="paper-section-head">
+          <h2 id="list-title">全部文献</h2>
+          <span class="result-count" id="result-count"></span>
+        </div>
+        <div class="paper-list" id="paper-list">
+          <div class="empty-state">正在加载文献…</div>
+        </div>
+      </section>
+
+      <!-- 使用说明视图 -->
+      <section class="about-view hidden" id="about-view">
+        <div class="about-card">
+          <h2>关于 PaperTrail</h2>
+          <p>帮助科研人员集中管理论文摘要、研究笔记与阅读状态，通过 seekdb 快速检索已有科研资料。</p>
+          <ul>
+            <li><b>添加文献</b>：点击右上角「＋ 添加文献」，填写标题、作者、摘要、链接、标签、阅读状态与个人笔记。</li>
+            <li><b>检索文献</b>：在搜索栏输入关键词，可命中标题、摘要与笔记内容；支持按阅读状态筛选。</li>
+            <li><b>管理文献</b>：点击文献卡片查看详情，支持编辑与删除。</li>
+            <li><b>数据存储</b>：所有数据由 seekdb 嵌入式模式持久化，刷新页面或重启应用后数据依然保留。</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- 文献表单弹窗(添加/编辑) -->
+  <div class="modal-mask hidden" id="form-modal">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="form-modal-title">添加文献</h2>
+        <button class="modal-close" data-close="form-modal">×</button>
+      </div>
+      <form id="paper-form">
+        <input type="hidden" id="form-id" />
+        <label class="field">
+          <span class="field-label">标题 <em>*</em></span>
+          <input type="text" id="form-title" required maxlength="300" placeholder="论文标题" />
+        </label>
+        <label class="field">
+          <span class="field-label">作者</span>
+          <input type="text" id="form-authors" maxlength="200" placeholder="多个作者用逗号分隔" />
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span class="field-label">论文链接</span>
+            <input type="url" id="form-link" maxlength="500" placeholder="https://…" />
+          </label>
+          <label class="field">
+            <span class="field-label">阅读状态</span>
+            <select id="form-status">
+              <option value="unread">未读</option>
+              <option value="read">已读</option>
+            </select>
+          </label>
+        </div>
+        <label class="field">
+          <span class="field-label">标签</span>
+          <input type="text" id="form-tags" maxlength="200" placeholder="多个标签用逗号分隔，如：数据库,分布式" />
+        </label>
+        <label class="field">
+          <span class="field-label">摘要</span>
+          <textarea id="form-abstract" rows="4" maxlength="5000" placeholder="论文摘要"></textarea>
+        </label>
+        <label class="field">
+          <span class="field-label">个人笔记</span>
+          <textarea id="form-note" rows="3" maxlength="5000" placeholder="阅读笔记、想法…"></textarea>
+        </label>
+        <div class="modal-foot">
+          <button type="button" class="btn btn-ghost" data-close="form-modal">取消</button>
+          <button type="submit" class="btn btn-primary" id="form-submit">保存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 文献详情弹窗 -->
+  <div class="modal-mask hidden" id="detail-modal">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>文献详情</h2>
+        <button class="modal-close" data-close="detail-modal">×</button>
+      </div>
+      <div class="detail-body" id="detail-body"></div>
+      <div class="modal-foot">
+        <button class="btn btn-danger" id="detail-delete">删除</button>
+        <button class="btn btn-primary" id="detail-edit">编辑</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 轻提示 -->
+  <div class="toast hidden" id="toast"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
