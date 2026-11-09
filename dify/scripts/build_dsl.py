@@ -39,8 +39,8 @@ def code(nid, title, variables, outputs):
         nid,
         title,
         "code",
-        code_language="python3",
-        code=(ROOT / f"dsl/nodes/{nid}.py").read_text(),
+        code_language="javascript",
+        code=(ROOT / f"dsl/nodes/{nid}.js").read_text(),
         variables=[{"variable": k, "value_selector": v} for k, v in variables.items()],
         outputs={k: {"type": v, "children": None} for k, v in outputs.items()},
         error_strategy="fail-branch",
@@ -88,7 +88,11 @@ node(
 code(
     "encode",
     "生成独立轮次",
-    {"player_code": ["start", "player_code"], "query": ["sys", "query"]},
+    {
+        "player_code": ["start", "player_code"],
+        "query": ["sys", "query"],
+        "turn_id": ["sys", "workflow_run_id"],
+    },
     {"body": "string"},
 )
 http("prepare", "从 PowerContext 召回旧事", "{{#env.GAME_URL#}}/v1/turns/prepare", "encode", "GAME_API_KEY")

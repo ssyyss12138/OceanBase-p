@@ -79,6 +79,8 @@ curl --fail http://127.0.0.1:8080/console/api/setup
 
 ## 导入 DSL 与体验入口
 
+本部署通过 `deploy/Dify.Dockerfile` 对固定 Dify 1.9.2 做兼容调整：其 CodeExecutor 请求固定为 `enable_network=false`，与沙箱禁网配置一致。工作流 Code 节点使用 JavaScript 原生 JSON 和正则处理，不需要网络或 Python 动态模块导入。补丁对原始内容有精确断言，版本不匹配时会停止构建。
+
 只有一个应用 DSL，导入顺序为 `dsl/causal-store.yml`。`dsl/nodes/` 保存同一文件内嵌代码的可读源文件，不是第二个要导入的应用。
 
 1. 浏览器打开 `http://127.0.0.1:8080/install`，创建本地 Dify 管理员，完成初始化。

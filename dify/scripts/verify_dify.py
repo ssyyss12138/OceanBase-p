@@ -39,6 +39,8 @@ def play(code, query, conversation=None):
     answer = data.get("answer", "")
     if "✅ 本轮真实互动已存档。" not in answer:
         raise RuntimeError("Round not confirmed. Inspect real Dify node logs and model configuration.")
+    if "老板的对讲机暂时失声" in answer:
+        raise RuntimeError("Narration fell back to the receipt; this is not a full real-model pass")
     transcript.append(
         {
             "query": query,

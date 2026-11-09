@@ -1,0 +1,11 @@
+{
+  "kind": "real-dify-console-import",
+  "dify_version": "1.9.2",
+  "dsl_version": "0.4.0",
+  "app_id": "a0d333db-8827-42b3-99b3-c44dc82f2486",
+  "import_status": "completed",
+  "published": true,
+  "node_count": 12,
+  "model_configured": false,
+  "limitation": "Import/publish success alone does not prove end-to-end Qwen execution."
+}

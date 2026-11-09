@@ -6,6 +6,8 @@ from typing import Literal
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi.responses import JSONResponse
+from filelock import Timeout as LockTimeout
 from pydantic import BaseModel, ConfigDict, Field
 
 from .pc import MemoryUnavailable, PowerContext
@@ -53,6 +55,10 @@ def create_app(game=None, api_key=None):
         game.pc.client.close()
 
     app = FastAPI(title="因果便利店", version="1.0.0", lifespan=lifespan)
+
+    @app.exception_handler(LockTimeout)
+    async def busy_archive(request, exc):
+        return JSONResponse(status_code=503, content={"detail": "存档正在处理另一轮请求，请稍后重试"})
 
     def authorize(authorization: str = Header(default="")):
         if not hmac.compare_digest(authorization, "Bearer " + key):

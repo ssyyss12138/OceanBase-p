@@ -8,6 +8,7 @@ x-api-env: &api-env
   DB_HOST: db
   DB_PORT: 5432
   DB_DATABASE: dify
+  SQLALCHEMY_POOL_PRE_PING: 'true'
   REDIS_HOST: redis
   REDIS_PORT: 6379
   REDIS_PASSWORD: ${REDIS_PASSWORD:?run scripts/init_config.py}
@@ -61,7 +62,10 @@ services:
       WORKER_TIMEOUT: 15
     restart: unless-stopped
   api:
-    image: langgenius/dify-api:1.9.2
+    image: causal-corner-store-dify-api:1.9.2-no-code-network
+    build:
+      context: ..
+      dockerfile: deploy/Dify.Dockerfile
     environment:
       <<: *api-env
       MODE: api
@@ -73,7 +77,10 @@ services:
     ports: ['127.0.0.1:5001:5001']
     restart: unless-stopped
   worker:
-    image: langgenius/dify-api:1.9.2
+    image: causal-corner-store-dify-api:1.9.2-no-code-network
+    build:
+      context: ..
+      dockerfile: deploy/Dify.Dockerfile
     environment:
       <<: *api-env
       MODE: worker

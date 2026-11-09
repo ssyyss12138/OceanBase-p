@@ -1,0 +1,64 @@
+{
+  "kind": "real-dify-expected-model-configuration-failure",
+  "app_id": "a0d333db-8827-42b3-99b3-c44dc82f2486",
+  "workflow_run_id": "dbf27cec-a477-469e-8abc-292aa595ab85",
+  "message_id": "0ba53c67-2c19-42ed-8b1b-ae96223f7665",
+  "answer": "便利店暂时无法完成这一轮。请检查存档码、模型配置和记忆服务后重试。若记忆写入曾中断，下次进入会先恢复已确认的待处理账单；请勿把报错当作交易完成。",
+  "checks": [
+    "real-sandbox-code-execution",
+    "real-backend-PowerContext-preparation",
+    "unconfigured-model-did-not-commit-a-round"
+  ],
+  "nodes": [
+    {
+      "node_id": "start",
+      "node_type": "start",
+      "status": "succeeded",
+      "error": null,
+      "elapsed_time": 0.002525
+    },
+    {
+      "node_id": "encode",
+      "node_type": "code",
+      "status": "succeeded",
+      "error": null,
+      "elapsed_time": 0.07255
+    },
+    {
+      "node_id": "prepare",
+      "node_type": "http-request",
+      "status": "succeeded",
+      "error": null,
+      "elapsed_time": 0.071088
+    },
+    {
+      "node_id": "plan",
+      "node_type": "code",
+      "status": "succeeded",
+      "error": null,
+      "elapsed_time": 0.033938
+    },
+    {
+      "node_id": "planner",
+      "node_type": "http-request",
+      "status": "exception",
+      "error": "[Errno -2] Name or service not known",
+      "elapsed_time": 0.033337
+    },
+    {
+      "node_id": "commit",
+      "node_type": "code",
+      "status": "exception",
+      "error": "de:internal/modules/run_main:135:12)",
+      "elapsed_time": 0.038478
+    },
+    {
+      "node_id": "error",
+      "node_type": "answer",
+      "status": "succeeded",
+      "error": null,
+      "elapsed_time": 0.004553
+    }
+  ],
+  "limitation": "No successful Qwen call; this is not full end-to-end acceptance."
+}

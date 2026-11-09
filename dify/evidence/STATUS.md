@@ -9,7 +9,8 @@
 | 玩家隔离、跨会话式读取与业务存档重新打开 | 已通过，同上；该脚本没有调用 Dify 或 LLM |
 | 真实 game 与 PowerContext 进程重启后恢复 | 已通过，`restart.json` |
 | Compose 配置语法检查 | 已通过；不代表镜像成功启动 |
-| 真实 Dify 导入、发布与节点执行 | 正在准备运行环境，尚未验收 |
+| 真实 Dify 导入与发布 | 已通过，`dify-import.json` |
+| 真实 Dify 禁网沙箱 Code 节点及后端/PowerContext 准备阶段 | 已通过，`dify-configuration-failure.json`；模型未配置时正确进入失败分支，不记作完整模型成功 |
 | 真实 Qwen 调用及完整 Dify→Qwen→PowerContext 流程 | 等待本机配置实际模型地址与 API Key，尚未验收 |
 | 从干净 Docker 卷完整复现 | 尚未验收 |
 | 官方得分 | 尚无本作品的平台结果 |
