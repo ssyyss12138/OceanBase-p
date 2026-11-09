@@ -22,10 +22,11 @@ import math
 import re
 from collections import Counter
 from itertools import pairwise
+from types import SimpleNamespace
 from typing import Literal
 from urllib.parse import quote
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, StrictInt, model_validator
 from pypdf import PdfReader
 
 from powercontext.artifacts import MemoryCitation
@@ -49,7 +50,7 @@ class PDFPageInput(BaseModel):
 
     document_id: str
     document_sha256: str
-    page_number: int
+    page_number: StrictInt
     text: str
 
     @model_validator(mode="after")
@@ -68,7 +69,7 @@ class PDFPageSource(Source):
     source_id: str
     document_id: str
     document_sha256: str
-    page_number: int
+    page_number: StrictInt
     text: str
 
     @model_validator(mode="after")
@@ -413,6 +414,42 @@ def _pdf_document_targets(question: str, documents: set[str]) -> set[str]:
     return {document_id for document_id, score in scores.items() if score == best}
 
 
+async def _pdf_list_candidates(memory) -> tuple[object, ...]:
+    """Read every active page through the public Memory listing API."""
+
+    list_entries = getattr(memory, "list", None)
+    if list_entries is None:
+        return ()
+    try:
+        page = await list_entries()
+    except Exception:
+        return ()
+    candidates = []
+    for record in getattr(page, "entries", ()):
+        entry = getattr(record, "entry", None)
+        citation = getattr(record, "citation", None)
+        if entry is None or citation is None:
+            continue
+        source_ids = tuple(
+            reference.source_id
+            for reference in getattr(entry, "sources", ())
+            if reference.source_type == PDF_PAGE_SOURCE_NAME
+        )
+        if not source_ids:
+            continue
+        candidates.append(
+            SimpleNamespace(
+                memory_ref=citation.memory_ref,
+                entry_id=citation.entry_id,
+                entry_version_id=citation.entry_version_id,
+                text=entry.text,
+                source_id=source_ids[0],
+                citation=citation,
+            )
+        )
+    return tuple(candidates)
+
+
 async def search_pdf_pages(  # noqa: C901 - bounded multi-query retrieval
     memory,
     question: str,
@@ -425,6 +462,8 @@ async def search_pdf_pages(  # noqa: C901 - bounded multi-query retrieval
     if type(limit) is not int or limit < 1:
         raise ValueError("limit must be a positive integer")  # noqa: TRY003
     from powercontext.builtin.runtime import GetMemoryEntryRequest, SearchMemoryRequest
+
+    listed = await _pdf_list_candidates(memory)
 
     candidates: dict[tuple[str, int, str, str], object] = {}
     bonus: dict[tuple[str, int, str, str], float] = {}
@@ -451,6 +490,14 @@ async def search_pdf_pages(  # noqa: C901 - bounded multi-query retrieval
                 bonus[key] = max(bonus.get(key, 0.0), 12.0 / rank)
                 if rank <= 20:
                     priority_hits.append(hit)
+    for candidate in listed:
+        key = (
+            candidate.memory_ref.artifact_id,
+            candidate.memory_ref.revision,
+            candidate.entry_id,
+            candidate.entry_version_id,
+        )
+        candidates.setdefault(key, candidate)
     if not candidates:
         return ()
     documents = {_pdf_document_id(hit) for hit in candidates.values()}
