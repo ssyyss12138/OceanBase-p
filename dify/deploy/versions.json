@@ -1,0 +1,11 @@
+{
+  "dify": "1.9.2",
+  "dsl": "0.4.0",
+  "dify_sandbox": "0.2.12",
+  "python_image": "python:3.12.12-slim",
+  "powercontext_commit": "c4c95e465775b5b87ccac796194e01086bd7cc8f",
+  "powercontext_source": "https://github.com/oceanbase/powercontext",
+  "model_protocol": "OpenAI-compatible Chat Completions (Qwen)",
+  "model_default": "qwen-plus",
+  "model_snapshot": "Record the actual returned model after the real test"
+}
