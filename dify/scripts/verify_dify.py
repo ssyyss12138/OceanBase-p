@@ -81,6 +81,33 @@ for confess, ending in [(True, "诚实赊账客"), (False, "回声通缉令")]:
         turn = play(player, "我坦白，我现在还没准备好兑现笑话承诺。", turn["conversation_id"])
     turn = play(player, "我要结算离店。", turn["conversation_id"])
     assert ending in turn["answer"]
+# Inspect real node executions without exporting inputs, prompts or credentials.
+c.post(
+    "/console/api/login",
+    json={"email": cfg["admin_email"], "password": cfg["admin_password"]},
+).raise_for_status()
+c.headers["X-CSRF-Token"] = c.cookies.get("csrf_token")
+prefix = "/console/api/apps/" + cfg["app_id"]
+r = c.get(prefix + "/advanced-chat/workflow-runs", params={"limit": 20, "triggered_from": "app-run"})
+r.raise_for_status()
+runs = {run.get("message_id"): run for run in r.json()["data"]}
+for turn in transcript:
+    run = runs[turn["message_id"]]
+    turn["workflow_run_id"] = run["id"]
+    r = c.get(prefix + "/workflow-runs/" + run["id"] + "/node-executions")
+    r.raise_for_status()
+    nodes = {n["node_id"]: n for n in r.json()["data"]}
+    turn["verified_nodes"] = []
+    for nid in ["encode", "prepare", "plan", "planner", "commit", "save", "narrate", "narrator", "format"]:
+        n = nodes[nid]
+        assert n["status"] == "succeeded", f"Real node failed at {nid}"
+        summary = {"node_id": nid, "status": n["status"]}
+        if nid in ("planner", "narrator"):
+            assert n["outputs"]["status_code"] == 200
+            summary["model"] = json.loads(n["outputs"]["body"])["model"]
+        if nid == "save":
+            assert json.loads(n["outputs"]["body"])["memory_saved"] is True
+        turn["verified_nodes"].append(summary)
 report = {
     "kind": "real-dify-qwen-powercontext-end-to-end",
     "checked_at": datetime.now(timezone.utc).isoformat(),

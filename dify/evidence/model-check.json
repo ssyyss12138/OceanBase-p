@@ -1,0 +1,15 @@
+{
+  "kind": "real-llm-api-check",
+  "checked_at": "2026-11-09T08:47:55.125624+00:00",
+  "model": "qwen3.7-plus",
+  "reply": "便利店开门了",
+  "usage": {
+    "prompt_tokens": 18,
+    "total_tokens": 21,
+    "completion_tokens": 3,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "text_tokens": 18
+    }
+  }
+}

@@ -6,6 +6,6 @@
   "import_status": "completed",
   "published": true,
   "node_count": 12,
-  "model_configured": false,
+  "model_configured": true,
   "limitation": "Import/publish success alone does not prove end-to-end Qwen execution."
 }

@@ -1,0 +1,82 @@
+{
+  "kind": "real-docker-compose-deployment",
+  "checked_at": "2026-11-09T11:51:38.167644+00:00",
+  "architecture": "linux/arm64",
+  "services": [
+    {
+      "service": "api",
+      "state": "running",
+      "health": null,
+      "image": "causal-corner-store-dify-api:1.9.2-no-code-network"
+    },
+    {
+      "service": "db",
+      "state": "running",
+      "health": "healthy",
+      "image": "postgres:15.14-alpine"
+    },
+    {
+      "service": "game",
+      "state": "running",
+      "health": null,
+      "image": "causal-corner-store-game"
+    },
+    {
+      "service": "nginx",
+      "state": "running",
+      "health": null,
+      "image": "nginx:1.28.0-alpine"
+    },
+    {
+      "service": "powercontext",
+      "state": "running",
+      "health": "healthy",
+      "image": "causal-corner-store-powercontext"
+    },
+    {
+      "service": "redis",
+      "state": "running",
+      "health": null,
+      "image": "redis:7.4.6-alpine"
+    },
+    {
+      "service": "sandbox",
+      "state": "running",
+      "health": null,
+      "image": "langgenius/dify-sandbox:0.2.12"
+    },
+    {
+      "service": "web",
+      "state": "running",
+      "health": null,
+      "image": "langgenius/dify-web:1.9.2"
+    },
+    {
+      "service": "worker",
+      "state": "running",
+      "health": null,
+      "image": "causal-corner-store-dify-api:1.9.2-no-code-network"
+    }
+  ],
+  "source_sha256": {
+    "deploy/compose.yaml": "f17917c68874650e36de6cd216a7f2f20214b5c4b23c33d21adbcd9681a7ea59",
+    "deploy/Dify.Dockerfile": "1bd9cf66aa1b8f69da4d1991fa3c199c5910c0e821b67f6c85fd97f505c88f41",
+    "deploy/Game.Dockerfile": "08f4e386ffb924497f8ffd12c1154702f54baebcfcac76186af09bc9ba95f503",
+    "deploy/PowerContext.Dockerfile": "74d94eae7e1524712e0e2c5b5a59681c9a884005331c0d865c22815144c85c96",
+    "dsl/causal-store.yml": "db5c7691d636b23f3e101db8b3260f5b59fac83cc99bf446d0f016d4ec58d4cc",
+    "uv.lock": "ee1001086cc66357fb65ac7d6e749df37c5392d24067c1aa0687cdcfdaebb48f"
+  },
+  "checks": [
+    "all-nine-services-running",
+    "fixed-commit-PowerContext-source-image-built",
+    "game-and-PowerContext-started-on-new-named-volumes",
+    "actual-write-read-and-container-restart-checks",
+    "full-Dify-Qwen-PowerContext-workflow-passed"
+  ],
+  "evidence": [
+    "docker-powercontext-integration.json",
+    "docker-restart.json",
+    "dify-e2e.json"
+  ],
+  "limitations": "Dify was initialized earlier in this dedicated Compose deployment; this records cumulative deployment verification, not a second independent installation of the entire stack. Browser visual inspection was unavailable; gameplay was verified through the real published Dify API."
+}

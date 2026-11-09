@@ -55,9 +55,25 @@ def test_model_output_cannot_invent_action():
 
 def test_narration_outage_preserves_confirmed_receipt():
     node = load_node("format")
-    r = {"receipt": "已付清", "state_card": "欠账0", "state": {}, "history": "旧事证据"}
+    history = {
+        "items": [
+            {
+                "citation": {"artifact_id": "internal-id"},
+                "content": json.dumps({"玩家真实输入": "独特的铜锣烧笑话", "事实结果": "已偿还一个笑话"}),
+            }
+        ]
+    }
+    r = {
+        "receipt": "已付清",
+        "state_card": "欠账0",
+        "state": {},
+        "history": "BEGIN_POWERCONTEXT_PREPARED_CONTEXT_V1\n"
+        + json.dumps(history)
+        + "\nEND_POWERCONTEXT_PREPARED_CONTEXT_V1",
+    }
     text = node.main("{}", 0, json.dumps(r))["answer"]
-    assert "已经确认并保存" in text and "已付清" in text and "旧事证据" in text
+    assert "已经确认并保存" in text and "已付清" in text and "独特的铜锣烧笑话" in text
+    assert "已偿还一个笑话" in text and "internal-id" not in text and "BEGIN_POWERCONTEXT" not in text
 
 
 def test_json_input_and_dify_run_identity_are_preserved():

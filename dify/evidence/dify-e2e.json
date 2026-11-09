@@ -1,0 +1,506 @@
+{
+  "kind": "real-dify-qwen-powercontext-end-to-end",
+  "checked_at": "2026-11-09T11:50:04.473295+00:00",
+  "dify_version": "1.9.2",
+  "app_id": "a0d333db-8827-42b3-99b3-c44dc82f2486",
+  "marker": "铜锣烧味的月亮-0fc9edd0",
+  "checks": [
+    "real-model-action-recognition",
+    "real-memory-write",
+    "new-conversation-recall-in-generated-dialogue",
+    "player-isolation",
+    "three-endings"
+  ],
+  "rounds": [
+    {
+      "query": "我想买一瓶勇气汽水。",
+      "answer": "### 🏪 因果便利店\n\n哟，第一次进店就敢点这瓶“勇气汽水”？眼光够毒的。拿去吧，冰镇的，喝下去保准你心跳加速、手心冒汗——别误会，那是副作用，不是心动。\n\n不过丑话说前头，这玩意儿不收银币，收“真笑话”。看你面生，这次先记账。要是下次来还讲不出个像样的段子，我就把你那还没讲出口的笑话打折处理了。记住，收据会记仇，别想赖账！\n\n**已确认账单**：你喝下勇气汽水，欠老板一个真笑话。下次见面这笔账仍在。\n\n🎒 背包：勇气汽水｜🧾 欠笑话：1｜✅ 已兑现：0\n\n可继续输入：买勇气汽水 / 买回声糖 / 讲笑话：你的笑话 / 坦白 / 回忆 / 结算。\n\n✅ 本轮真实互动已存档。\n\n**老板翻出的旧收据**\n\n本轮没有翻到相关旧收据。",
+      "new_conversation": true,
+      "conversation_id": "08f53b89-8e5e-457e-be9c-c8a4d73f0557",
+      "message_id": "e620fe99-808e-4ebe-b778-8812e357a328",
+      "workflow_run_id": "7e0a5056-fa22-4da4-84bc-db7d9f2f6b36",
+      "seconds": 5.527,
+      "verified_nodes": [
+        {
+          "node_id": "encode",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "prepare",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "plan",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "planner",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "commit",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "save",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrate",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrator",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "format",
+          "status": "succeeded"
+        }
+      ]
+    },
+    {
+      "query": "讲笑话：一只章鱼拿着铜锣烧味的月亮-0fc9edd0去银行存钱，柜员说我们不收夜宵。",
+      "answer": "### 🏪 因果便利店\n\n啧，章鱼拿铜锣烧味的月亮去银行？这脑洞比过期的罐头还硬。柜员拒收夜宵倒是挺专业，毕竟银行只认冷冰冰的数字，不认热乎乎的甜点。不过既然你把这荒诞段子讲出来了，笑话账本上的欠债就勾销一笔。别得意，这只是利息减免。看你手里攥着“勇气”，下次要是敢讲更冷的，我可要收取暖费了。\n\n**已确认账单**：老板把你刚刚讲的真实内容记入笑话账本，笑话欠账减少一个。\n\n🎒 背包：勇气汽水｜🧾 欠笑话：0｜✅ 已兑现：1\n\n可继续输入：买勇气汽水 / 买回声糖 / 讲笑话：你的笑话 / 坦白 / 回忆 / 结算。\n\n✅ 本轮真实互动已存档。\n\n**老板翻出的旧收据**\n\n本轮没有翻到相关旧收据。",
+      "new_conversation": false,
+      "conversation_id": "08f53b89-8e5e-457e-be9c-c8a4d73f0557",
+      "message_id": "90d273e0-b480-4415-9797-6771bd927f23",
+      "workflow_run_id": "4f516c6f-e3bb-4728-a1fc-9093c31701b1",
+      "seconds": 4.441,
+      "verified_nodes": [
+        {
+          "node_id": "encode",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "prepare",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "plan",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "planner",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "commit",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "save",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrate",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrator",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "format",
+          "status": "succeeded"
+        }
+      ]
+    },
+    {
+      "query": "我上次讲的笑话里，月亮是什么味道？请复述那个独特说法。",
+      "answer": "### 🏪 因果便利店\n\n哼，连这种陈年旧账都要翻出来？看来你的记性比货架上过期的罐头还顽固。\n\n既然你诚心发问，我就大发慈悲帮你回忆一下：上次那只去银行存钱的章鱼手里拿的月亮，可是**铜锣烧味**的。虽然柜员冷酷地拒绝接收这份“夜宵”，但这独特的口味倒是成功抵消了你的一笔笑话欠账。\n\n怎么，现在是想再买个铜锣烧回味一下，还是打算用新的段子来清空账单？\n\n**已确认账单**：请根据本轮实际召回的记忆回应玩家；没有召回时不得编造往事。\n\n🎒 背包：勇气汽水｜🧾 欠笑话：0｜✅ 已兑现：1\n\n可继续输入：买勇气汽水 / 买回声糖 / 讲笑话：你的笑话 / 坦白 / 回忆 / 结算。\n\n✅ 本轮真实互动已存档。\n\n**老板翻出的旧收据**\n\n```text\n你说：讲笑话：一只章鱼拿着铜锣烧味的月亮-0fc9edd0去银行存钱，柜员说我们不收夜宵。\n后来：老板把你刚刚讲的真实内容记入笑话账本，笑话欠账减少一个。\n```",
+      "new_conversation": true,
+      "conversation_id": "abe64a2f-c9e5-4d79-9b00-c457c0f63e4e",
+      "message_id": "4addfbc8-d057-493b-a9dd-fc3cb55b8bb1",
+      "workflow_run_id": "43f6c610-8594-4ddf-a253-18b065de5498",
+      "seconds": 5.279,
+      "verified_nodes": [
+        {
+          "node_id": "encode",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "prepare",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "plan",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "planner",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "commit",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "save",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrate",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrator",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "format",
+          "status": "succeeded"
+        }
+      ]
+    },
+    {
+      "query": "兑现承诺了，我要结算离店。",
+      "answer": "### 🏪 因果便利店\n\n哼，算你识相。钥匙给你收好，别弄丢了，这可是夜班的大门，不是玩具。想起你之前讲的那个“铜锣烧味的月亮”，虽然银行柜员拒收夜宵，但这股子胡闹劲儿倒是把笑话债还清了。勇气汽水没白喝，承诺也没在货架上打呼噜。既然结局是「守约合伙人」，以后深夜的灯光就归你管了。走吧，别让我看见你在门口徘徊，我这儿不回收留恋。\n\n**已确认账单**：结局「守约合伙人」：承诺全部兑现，你获得了便利店的夜班钥匙。\n\n🎒 背包：勇气汽水｜🧾 欠笑话：0｜✅ 已兑现：1\n🏁 结局：**守约合伙人**\n\n本局已完成。你仍可询问这段经历；用新的随机存档码开始另一种人生。\n\n✅ 本轮真实互动已存档。\n\n**老板翻出的旧收据**\n\n```text\n你说：讲笑话：一只章鱼拿着铜锣烧味的月亮-0fc9edd0去银行存钱，柜员说我们不收夜宵。\n后来：老板把你刚刚讲的真实内容记入笑话账本，笑话欠账减少一个。\n\n你说：我上次讲的笑话里，月亮是什么味道？请复述那个独特说法。\n后来：请根据本轮实际召回的记忆回应玩家；没有召回时不得编造往事。\n```",
+      "new_conversation": false,
+      "conversation_id": "abe64a2f-c9e5-4d79-9b00-c457c0f63e4e",
+      "message_id": "c6475663-d532-4238-8768-e4d3a48b5fc1",
+      "workflow_run_id": "d76fe502-ef3f-4991-b5ae-bd75f84b7bfe",
+      "seconds": 6.051,
+      "verified_nodes": [
+        {
+          "node_id": "encode",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "prepare",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "plan",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "planner",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "commit",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "save",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrate",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrator",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "format",
+          "status": "succeeded"
+        }
+      ]
+    },
+    {
+      "query": "我们以前有讲过关于月亮的笑话吗？",
+      "answer": "### 🏪 因果便利店\n\n别套近乎，小鬼。看你这生疏的站姿和空空如也的双手，就知道这是你头一回踏进我的店门。收据上可没写过咱们有过什么“月光交情”，我也没在货架底下翻出过关于月亮的旧账本。\n\n想听笑话？行啊，但先说好，本店概不赊账。你要是能讲个让我这老骨头都忍不住嘴角抽动的月亮段子，我就考虑给你打个折。要是讲砸了……哼，那可就别怪我把你的尴尬记在账单上了。\n\n**已确认账单**：请根据本轮实际召回的记忆回应玩家；没有召回时不得编造往事。\n\n🎒 背包：空｜🧾 欠笑话：0｜✅ 已兑现：0\n\n可继续输入：买勇气汽水 / 买回声糖 / 讲笑话：你的笑话 / 坦白 / 回忆 / 结算。\n\n✅ 本轮真实互动已存档。\n\n**老板翻出的旧收据**\n\n本轮没有翻到相关旧收据。",
+      "new_conversation": true,
+      "conversation_id": "abfae1c1-cb56-4332-8c6c-0602a284895f",
+      "message_id": "80a446d4-e6f9-4b0f-a95c-5ab84fd67b56",
+      "workflow_run_id": "6d4737e4-4148-4680-8015-7a2d5b7c7365",
+      "seconds": 4.625,
+      "verified_nodes": [
+        {
+          "node_id": "encode",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "prepare",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "plan",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "planner",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "commit",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "save",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrate",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrator",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "format",
+          "status": "succeeded"
+        }
+      ]
+    },
+    {
+      "query": "买一瓶勇气汽水。",
+      "answer": "### 🏪 因果便利店\n\n哟，第一次来就敢碰“勇气汽水”？这玩意儿可不便宜，喝下去心里那点小九九藏都藏不住。看在你眼神还算清澈的份上，货给你了。不过咱丑话说前头，收据可是会记仇的——你欠我一个真笑话。别想着拿网上抄的段子糊弄我，我的耳朵比收银机还灵。下次见面要是还不上这笔账，哼，我就把你挂在货架上跟过期的罐头作伴。\n\n**已确认账单**：你喝下勇气汽水，欠老板一个真笑话。下次见面这笔账仍在。\n\n🎒 背包：勇气汽水｜🧾 欠笑话：1｜✅ 已兑现：0\n\n可继续输入：买勇气汽水 / 买回声糖 / 讲笑话：你的笑话 / 坦白 / 回忆 / 结算。\n\n✅ 本轮真实互动已存档。\n\n**老板翻出的旧收据**\n\n本轮没有翻到相关旧收据。",
+      "new_conversation": true,
+      "conversation_id": "0a8812e3-ecf0-43d2-9c78-846ee5a4b69b",
+      "message_id": "7098b3c3-a9e6-469e-8ee1-887ce7228233",
+      "workflow_run_id": "2786d051-0f79-4f19-aef5-0467623bea47",
+      "seconds": 5.17,
+      "verified_nodes": [
+        {
+          "node_id": "encode",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "prepare",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "plan",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "planner",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "commit",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "save",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrate",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrator",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "format",
+          "status": "succeeded"
+        }
+      ]
+    },
+    {
+      "query": "我坦白，我现在还没准备好兑现笑话承诺。",
+      "answer": "### 🏪 因果便利店\n\n哟，这就摊牌了？行吧，算你诚实。我这儿的收银机虽然爱记仇，但更讨厌虚情假意。既然你兜里揣着刚买的“勇气”，那就先留着下次用。笑话债嘛，就像过期的牛奶，放久了反而没味儿。这次就不催你了，欠条我夹在货架第三层打呼噜呢。别担心，我不收利息，只收真心。下次进门时，希望能听到个响儿，哪怕是个冷笑话也行。\n\n**已确认账单**：你承认自己还没准备好兑现承诺。老板记下了这份坦诚，欠账暂时保留。\n\n🎒 背包：勇气汽水｜🧾 欠笑话：1｜✅ 已兑现：0\n\n可继续输入：买勇气汽水 / 买回声糖 / 讲笑话：你的笑话 / 坦白 / 回忆 / 结算。\n\n✅ 本轮真实互动已存档。\n\n**老板翻出的旧收据**\n\n本轮没有翻到相关旧收据。",
+      "new_conversation": false,
+      "conversation_id": "0a8812e3-ecf0-43d2-9c78-846ee5a4b69b",
+      "message_id": "44b09517-c7be-46b2-a8ec-89f0a52a3957",
+      "workflow_run_id": "234f1228-2e3b-4718-9ec3-a31a98b83069",
+      "seconds": 13.635,
+      "verified_nodes": [
+        {
+          "node_id": "encode",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "prepare",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "plan",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "planner",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "commit",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "save",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrate",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrator",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "format",
+          "status": "succeeded"
+        }
+      ]
+    },
+    {
+      "query": "我要结算离店。",
+      "answer": "### 🏪 因果便利店\n\n行了，别在那儿磨蹭了。既然你坦白了还没准备好兑现那个笑话承诺，我也不是那种拿着账本追债的恶人。上次你喝下勇气汽水欠下的账，我就先给你记在“待办事项”的货架上打呼噜吧。这盏灯给你留着，毕竟诚实比冷笑话值钱。带着你的勇气走吧，下次进门时，希望能听到个像样的段子，而不是又一杯汽水的账单。慢走，门没锁。\n\n**已确认账单**：结局「诚实赊账客」：老板保留欠账，给坦诚的你留了一盏灯。\n\n🎒 背包：勇气汽水｜🧾 欠笑话：1｜✅ 已兑现：0\n🏁 结局：**诚实赊账客**\n\n本局已完成。你仍可询问这段经历；用新的随机存档码开始另一种人生。\n\n✅ 本轮真实互动已存档。\n\n**老板翻出的旧收据**\n\n```text\n你说：我坦白，我现在还没准备好兑现笑话承诺。\n后来：你承认自己还没准备好兑现承诺。老板记下了这份坦诚，欠账暂时保留。\n\n你说：买一瓶勇气汽水。\n后来：你喝下勇气汽水，欠老板一个真笑话。下次见面这笔账仍在。\n```",
+      "new_conversation": false,
+      "conversation_id": "0a8812e3-ecf0-43d2-9c78-846ee5a4b69b",
+      "message_id": "76fe3c81-1d3e-4568-bc35-91381a94ccbd",
+      "workflow_run_id": "1425ea37-368e-4a8e-997d-0a4e69232c85",
+      "seconds": 5.332,
+      "verified_nodes": [
+        {
+          "node_id": "encode",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "prepare",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "plan",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "planner",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "commit",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "save",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrate",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrator",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "format",
+          "status": "succeeded"
+        }
+      ]
+    },
+    {
+      "query": "买一瓶勇气汽水。",
+      "answer": "### 🏪 因果便利店\n\n哟，第一次来就敢碰“勇气汽水”？胆子不小嘛。这玩意儿可不便宜，喝下去容易，代价可是要拿真笑话来抵的。我看你眼神挺亮，不像是在开玩笑。行吧，既然你敢买，我就敢赊。记住啊，收据会记仇，下次见面要是讲不出个让我拍大腿的笑话，这账可就要利滚利了。拿着，小心别手抖摔了！\n\n**已确认账单**：你喝下勇气汽水，欠老板一个真笑话。下次见面这笔账仍在。\n\n🎒 背包：勇气汽水｜🧾 欠笑话：1｜✅ 已兑现：0\n\n可继续输入：买勇气汽水 / 买回声糖 / 讲笑话：你的笑话 / 坦白 / 回忆 / 结算。\n\n✅ 本轮真实互动已存档。\n\n**老板翻出的旧收据**\n\n本轮没有翻到相关旧收据。",
+      "new_conversation": true,
+      "conversation_id": "e6c5b60f-8633-4502-92c6-5712daf684aa",
+      "message_id": "3d9c76cf-10a7-4e8a-af0d-d0e7f0c55308",
+      "workflow_run_id": "d4f7a61e-76ab-49b0-81f2-15e86bbdfb6f",
+      "seconds": 4.395,
+      "verified_nodes": [
+        {
+          "node_id": "encode",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "prepare",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "plan",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "planner",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "commit",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "save",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrate",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrator",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "format",
+          "status": "succeeded"
+        }
+      ]
+    },
+    {
+      "query": "我要结算离店。",
+      "answer": "### 🏪 因果便利店\n\n想溜？门框上的风铃可是装了“承诺雷达”的。上次你拿走那瓶勇气汽水，说好了欠我一个真笑话，结果呢？这笔账在货架上打呼噜都震得罐头乱跳。\n\n现在好了，没兑现的承诺变成了“回声通缉令”，以后不管走到哪，都有张隐形的收据追着你念账单。别瞪我，因果便利店的规矩向来如此：勇气好买，诚信难还。下次见面，记得带上那个笑话，不然这嗡嗡声可不会停。慢走，不送！\n\n**已确认账单**：结局「回声通缉令」：没兑现的承诺变成会追着你念的收据。\n\n🎒 背包：勇气汽水｜🧾 欠笑话：1｜✅ 已兑现：0\n🏁 结局：**回声通缉令**\n\n本局已完成。你仍可询问这段经历；用新的随机存档码开始另一种人生。\n\n✅ 本轮真实互动已存档。\n\n**老板翻出的旧收据**\n\n```text\n你说：买一瓶勇气汽水。\n后来：你喝下勇气汽水，欠老板一个真笑话。下次见面这笔账仍在。\n```",
+      "new_conversation": false,
+      "conversation_id": "e6c5b60f-8633-4502-92c6-5712daf684aa",
+      "message_id": "0736042a-59ac-498a-8022-0bc284009e18",
+      "workflow_run_id": "46336a16-eafb-4250-8e7e-6c970ec9e206",
+      "seconds": 5.165,
+      "verified_nodes": [
+        {
+          "node_id": "encode",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "prepare",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "plan",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "planner",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "commit",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "save",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrate",
+          "status": "succeeded"
+        },
+        {
+          "node_id": "narrator",
+          "status": "succeeded",
+          "model": "qwen3.7-plus"
+        },
+        {
+          "node_id": "format",
+          "status": "succeeded"
+        }
+      ]
+    }
+  ]
+}
