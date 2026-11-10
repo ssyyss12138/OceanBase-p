@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PaperTrail · 科研文献检索工作台 — 2026 OceanBase 数据库大赛 Qoder 赛道作品</title>
+<style>
+  :root {
+    --blue: #1f6feb;
+    --blue-dark: #0d2a5c;
+    --teal: #0fb5a6;
+    --ink: #16233b;
+    --ink-2: #4b5a72;
+    --bg: #f6f8fb;
+    --card: #ffffff;
+    --line: #e5eaf2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.7;
+  }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- 导航 ---------- */
+  .topnav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,.9); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topnav .wrap { display: flex; align-items: center; height: 60px; gap: 28px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; color: var(--blue-dark); }
+  .brand .logo {
+    width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--blue), var(--teal));
+    color: #fff; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800;
+  }
+  .nav-links { display: flex; gap: 22px; margin-left: auto; font-size: 14px; }
+  .nav-links a { color: var(--ink-2); }
+  .nav-links a:hover { color: var(--blue); text-decoration: none; }
+  @media (max-width: 720px) { .nav-links { display: none; } }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    background: radial-gradient(1200px 500px at 20% -10%, #2d7cff33, transparent),
+                linear-gradient(135deg, #0d2a5c 0%, #123a7e 55%, #0d6e8f 100%);
+    color: #fff; padding: 88px 0 72px;
+  }
+  .hero .wrap { position: relative; }
+  .hero-badge {
+    display: inline-block; font-size: 13px; padding: 5px 14px; border-radius: 999px;
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25); margin-bottom: 22px;
+  }
+  .hero h1 { font-size: 44px; line-height: 1.25; font-weight: 800; letter-spacing: .5px; }
+  .hero h1 .grad {
+    background: linear-gradient(90deg, #7cc7ff, #5eead4);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p.sub { margin-top: 18px; font-size: 18px; color: #d5e2f5; max-width: 640px; }
+  .hero-tags { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .hero-tags span {
+    font-size: 13px; padding: 6px 14px; border-radius: 8px;
+    background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+  }
+  .hero-cta { margin-top: 36px; display: flex; flex-wrap: wrap; gap: 14px; }
+  .btn {
+    display: inline-block; padding: 11px 24px; border-radius: 10px; font-size: 15px; font-weight: 600;
+    border: none; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); text-decoration: none; }
+  .btn-primary { background: #fff; color: var(--blue-dark); box-shadow: 0 6px 20px rgba(0,0,0,.18); }
+  .btn-ghost { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.35); }
+  @media (max-width: 720px) {
+    .hero { padding: 56px 0 48px; }
+    .hero h1 { font-size: 30px; }
+    .hero p.sub { font-size: 16px; }
+  }
+
+  /* ---------- 通用 section ---------- */
+  section.block { padding: 72px 0; }
+  section.block.alt { background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .sec-head { margin-bottom: 36px; }
+  .sec-kicker { font-size: 13px; font-weight: 700; color: var(--blue); letter-spacing: 2px; text-transform: uppercase; }
+  .sec-head h2 { font-size: 30px; font-weight: 800; margin-top: 8px; color: var(--blue-dark); }
+  .sec-head p { margin-top: 10px; color: var(--ink-2); max-width: 720px; }
+
+  /* ---------- 痛点 ---------- */
+  .pain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .pain-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 26px;
+  }
+  .pain-card .icon { font-size: 26px; }
+  .pain-card h3 { font-size: 17px; margin: 12px 0 8px; color: var(--blue-dark); }
+  .pain-card p { font-size: 14px; color: var(--ink-2); }
+  @media (max-width: 860px) { .pain-grid { grid-template-columns: 1fr; } }
+
+  /* ---------- 功能 ---------- */
+  .feat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .feat-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 26px;
+    display: flex; gap: 18px;
+  }
+  .feat-card .icon {
+    flex: 0 0 48px; height: 48px; border-radius: 12px; font-size: 22px;
+    background: linear-gradient(135deg, #e8f1ff, #e6fbf7);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .feat-card h3 { font-size: 17px; color: var(--blue-dark); }
+  .feat-card p { font-size: 14px; color: var(--ink-2); margin-top: 6px; }
+  @media (max-width: 860px) { .feat-grid { grid-template-columns: 1fr; } }
+
+  /* ---------- 演示截图 ---------- */
+  .shot-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+  .shot { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .shot .bar {
+    display: flex; align-items: center; gap: 6px; padding: 10px 14px;
+    background: #f2f5fa; border-bottom: 1px solid var(--line);
+  }
+  .shot .bar i { width: 10px; height: 10px; border-radius: 50%; background: #dfe5ee; display: inline-block; }
+  .shot .bar span { margin-left: 8px; font-size: 12px; color: var(--ink-2); }
+  .shot img { width: 100%; display: block; border-bottom: 1px solid var(--line); }
+  .shot figcaption { padding: 14px 16px; font-size: 14px; color: var(--ink-2); }
+  .shot figcaption b { color: var(--ink); }
+  @media (max-width: 860px) { .shot-grid { grid-template-columns: 1fr; } }
+
+  /* ---------- 架构 ---------- */
+  .arch { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 32px; }
+  .arch-flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; margin-bottom: 28px; }
+  .arch-node {
+    flex: 1; min-width: 130px; border-radius: 12px; padding: 18px 14px; text-align: center;
+    border: 1px solid var(--line); background: #fafcff;
+  }
+  .arch-node .t { font-weight: 700; font-size: 15px; color: var(--blue-dark); }
+  .arch-node .d { font-size: 12.5px; color: var(--ink-2); margin-top: 6px; }
+  .arch-arrow { align-self: center; color: var(--blue); font-weight: 800; font-size: 18px; }
+  .arch-node.core { background: linear-gradient(135deg, #e8f1ff, #e6fbf7); border-color: #bcd6ff; }
+  .seekdb-role h3 { font-size: 16px; color: var(--blue-dark); margin-bottom: 10px; }
+  .seekdb-role ul { list-style: none; }
+  .seekdb-role li {
+    position: relative; padding-left: 22px; margin-bottom: 8px; font-size: 14px; color: var(--ink-2);
+  }
+  .seekdb-role li::before { content: "◆"; position: absolute; left: 0; color: var(--teal); font-size: 11px; top: 4px; }
+  .seekdb-role li b { color: var(--ink); }
+
+  /* ---------- 测试 ---------- */
+  .test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 22px; }
+  .test-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 24px; text-align: center; }
+  .test-card .num { font-size: 38px; font-weight: 800; color: var(--blue); }
+  .test-card .lbl { font-size: 14px; color: var(--ink-2); margin-top: 4px; }
+  .test-card .ok { font-size: 13px; color: #0f9d58; font-weight: 600; margin-top: 8px; }
+  @media (max-width: 860px) { .test-grid { grid-template-columns: 1fr; } }
+
+  .verify-list { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 26px 28px; }
+  .verify-list h3 { font-size: 16px; color: var(--blue-dark); margin-bottom: 12px; }
+  .verify-list ul { list-style: none; }
+  .verify-list li {
+    position: relative; padding-left: 24px; margin-bottom: 8px; font-size: 14px; color: var(--ink-2);
+  }
+  .verify-list li::before { content: "✓"; position: absolute; left: 0; color: #0f9d58; font-weight: 700; }
+
+  /* ---------- 代码/使用 ---------- */
+  .codeblock {
+    background: #0e1830; color: #d7e2f4; border-radius: 12px; padding: 20px 22px;
+    font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: 13.5px;
+    line-height: 1.8; overflow-x: auto; margin: 10px 0 22px;
+  }
+  .codeblock .c { color: #7d93b8; }
+  .codeblock .p { color: #6ee7b7; }
+  .steps { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 26px 28px; margin-bottom: 18px; }
+  .steps h3 { font-size: 16px; color: var(--blue-dark); margin-bottom: 12px; }
+  .steps ol { padding-left: 20px; }
+  .steps li { font-size: 14px; color: var(--ink-2); margin-bottom: 8px; }
+  .note {
+    border-left: 4px solid var(--blue); background: #eef4ff; border-radius: 8px;
+    padding: 14px 18px; font-size: 14px; color: var(--ink-2); margin-top: 18px;
+  }
+  .note b { color: var(--ink); }
+
+  /* ---------- Footer ---------- */
+  footer { background: #0d2a5c; color: #9db4d8; padding: 40px 0; font-size: 13.5px; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; }
+  footer a { color: #7cc7ff; }
+</style>
+</head>
+<body>
+
+<!-- 导航 -->
+<header class="topnav">
+  <div class="wrap">
+    <div class="brand"><span class="logo">P</span>PaperTrail</div>
+    <nav class="nav-links">
+      <a href="#intro">项目介绍</a>
+      <a href="#features">核心功能</a>
+      <a href="#demo">真实演示</a>
+      <a href="#arch">技术架构</a>
+      <a href="#tests">测试验证</a>
+      <a href="#code">代码与使用</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="wrap">
+    <span class="hero-badge">2026 OceanBase 数据库大赛 · Qoder 赛道作品</span>
+    <h1>PaperTrail<br /><span class="grad">科研文献检索工作台</span></h1>
+    <p class="sub">基于 FastAPI 与 seekdb 的本地科研文献管理系统：集中管理论文摘要、阅读状态与个人笔记，用真实数据库检索快速找到你读过的每一篇文献。</p>
+    <div class="hero-tags">
+      <span>FastAPI</span><span>pyseekdb</span><span>seekdb 嵌入式模式</span><span>HTML / CSS / JavaScript</span>
+    </div>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="https://github.com/ssyyss12138/OceanBase-p/tree/2026-competition-ecosystem/qoder" target="_blank" rel="noopener">查看 GitHub 代码</a>
+      <a class="btn btn-ghost" href="#demo">浏览真实运行画面</a>
+    </div>
+  </div>
+</section>
+
+<!-- 项目介绍 -->
+<section class="block" id="intro">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-kicker">项目介绍</div>
+      <h2>解决科研文献管理的三个痛点</h2>
+      <p>科研人员长期面对的资料管理难题，正是 PaperTrail 的出发点。</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="icon">🗂️</div>
+        <h3>文献与笔记分散</h3>
+        <p>论文散落在浏览器收藏、下载文件夹和聊天记录里，阅读笔记与原文脱离，回看时找不到出处。</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🔍</div>
+        <h3>资料查询效率低</h3>
+        <p>想找"之前读过的那篇讲分布式存储的论文"只能靠翻历史记录。PaperTrail 用 seekdb 全文检索，直接命中标题、摘要与笔记中的关键词。</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">📌</div>
+        <h3>阅读状态难以管理</h3>
+        <p>哪些读了、哪些还没读、重点笔记在哪，缺少统一的视图。PaperTrail 提供已读/未读统计看板与状态筛选，让进度一目了然。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 核心功能 -->
+<section class="block alt" id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-kicker">核心功能</div>
+      <h2>围绕真实数据库构建的文献工作台</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="icon">✍️</div>
+        <div>
+          <h3>文献新增、编辑与删除</h3>
+          <p>完整记录标题、作者、摘要、链接、标签、阅读状态与个人笔记，支持详情查看与随时修改、删除。</p>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="icon">🔎</div>
+        <div>
+          <h3>关键词检索与状态筛选</h3>
+          <p>搜索走 seekdb 真实全文检索（全文索引 + 子串匹配），关键词在结果中高亮，并可叠加已读/未读状态过滤。</p>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="icon">📊</div>
+        <div>
+          <h3>科研资料统计看板</h3>
+          <p>文献总数、已读、未读一屏呈现，「最近添加」视图快速回顾最新收录的文献。</p>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="icon">💾</div>
+        <div>
+          <h3>seekdb 数据持久化</h3>
+          <p>所有数据写入本地 seekdb 嵌入式数据库，刷新页面或重启应用后数据依然保留，已由跨进程测试验证。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 真实演示 -->
+<section class="block" id="demo">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-kicker">真实产品演示</div>
+      <h2>实际运行画面</h2>
+      <p>以下截图均来自 PaperTrail 在本机真实运行时的界面（统计数字为本地数据库中的真实数据：5 篇文献，2 篇已读，3 篇未读），未做任何虚构或修饰。</p>
+    </div>
+    <div class="shot-grid">
+      <figure class="shot">
+        <div class="bar"><i></i><i></i><i></i><span>localhost:8000 · 文献库</span></div>
+        <img src="screenshots/dashboard.png" alt="PaperTrail 主界面：统计看板与文献列表" />
+        <figcaption><b>工作台主界面</b> — 统计卡片显示文献总数 5、已读 2、未读 3；列表展示全部文献，左侧显示「seekdb 已连接 ✓」。</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="bar"><i></i><i></i><i></i><span>localhost:8000 · 搜索「分布式」</span></div>
+        <img src="screenshots/search.png" alt="关键词检索：搜索分布式命中 1 篇并高亮" />
+        <figcaption><b>关键词检索</b> — 搜索「分布式」由 seekdb 返回 1 篇命中文献，关键词在标题与摘要中高亮显示。</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="bar"><i></i><i></i><i></i><span>localhost:8000 · 文献详情</span></div>
+        <img src="screenshots/detail.png" alt="文献详情弹窗：标题、摘要、标签与笔记" />
+        <figcaption><b>文献详情</b> — 展示标题、作者、链接、标签、摘要与个人笔记，支持编辑与删除操作。</figcaption>
+      </figure>
+      <figure class="shot">
+        <div class="bar"><i></i><i></i><i></i><span>localhost:8000 · 添加文献</span></div>
+        <img src="screenshots/add.png" alt="添加文献表单：标题、作者、状态、标签、摘要、笔记字段" />
+        <figcaption><b>添加文献表单</b> — 新增文献时填写标题（必填）、作者、链接、阅读状态、标签、摘要与笔记。</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- 技术架构 -->
+<section class="block alt" id="arch">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-kicker">技术架构</div>
+      <h2>FastAPI + pyseekdb + 原生前端</h2>
+      <p>后端通过官方 pyseekdb SDK 的本地嵌入式模式读写 seekdb，前端零框架、零构建，直接以 REST API 与后端通信。</p>
+    </div>
+    <div class="arch">
+      <div class="arch-flow">
+        <div class="arch-node">
+          <div class="t">浏览器</div>
+          <div class="d">原生 HTML / CSS / JavaScript 中文界面</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node">
+          <div class="t">FastAPI</div>
+          <div class="d">REST API：文献增删改查、检索、统计</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node core">
+          <div class="t">pyseekdb SDK</div>
+          <div class="d">官方 Python SDK，嵌入式模式 Client(path, database)</div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node core">
+          <div class="t">seekdb 引擎</div>
+          <div class="d">本地引擎进程，数据落盘持久化</div>
+        </div>
+      </div>
+      <div class="seekdb-role">
+        <h3>seekdb 在本项目中的实际作用</h3>
+        <ul>
+          <li><b>数据保存</b>：每条文献的全部字段（标题/作者/摘要/标签/状态/笔记）作为元数据写入 seekdb 集合，正文内容写入 document 字段，通过 <b>collection.add / upsert</b> 落盘。</li>
+          <li><b>数据查询</b>：按 ID 读取文献详情、按阅读状态过滤列表，通过 <b>collection.get</b> 完成。</li>
+          <li><b>数据检索</b>：关键词搜索通过 <b>where_document</b> 下发到 seekdb 执行——全文索引匹配（$contains）与正则子串匹配（$regex）取并集，保证中文短关键词也能命中标题、摘要与笔记。</li>
+          <li><b>数据更新与删除</b>：通过 <b>collection.update / delete</b> 完成，写操作后调用 refresh_index 等待索引可见，实现「写入后立即可检索」。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 测试验证 -->
+<section class="block" id="tests">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-kicker">测试与技术验证</div>
+      <h2>真实数据库测试记录</h2>
+      <p>以下为项目开发过程中实际执行的自动化验证结果，全部针对真实 seekdb 数据库读写，不使用模拟数据。</p>
+    </div>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="num">27/27</div>
+        <div class="lbl">seekdb 读写验证（写入阶段断言）</div>
+        <div class="ok">全部通过</div>
+      </div>
+      <div class="test-card">
+        <div class="num">9/9</div>
+        <div class="lbl">跨进程持久化验证（独立新进程重开数据库）</div>
+        <div class="ok">全部通过</div>
+      </div>
+      <div class="test-card">
+        <div class="num">12/12</div>
+        <div class="lbl">端到端 REST API 实测（增删改查 + 检索 + 统计）</div>
+        <div class="ok">全部通过</div>
+      </div>
+    </div>
+    <div class="verify-list">
+      <h3>seekdb 能力如何被验证</h3>
+      <ul>
+        <li><b>写入</b>：脚本向 seekdb 集合真实写入 3 条文献，校验 count 与按 ID 读回的内容一致。</li>
+        <li><b>检索</b>：分别以标题、摘要、笔记中的关键词发起 where_document 检索，校验命中结果；并验证含停用词查询不会误命中无关文献。</li>
+        <li><b>更新与删除</b>：更新文献状态与笔记后按新关键词可检索；删除后按 ID 与关键词均不可再查到。</li>
+        <li><b>持久化</b>：验证脚本分两次独立进程运行（--write 与 --verify），第二次在新进程中重开数据库，校验第一次写入、更新、删除的结果全部保留——证明数据真实落盘于 seekdb。</li>
+        <li><b>端到端</b>：通过 HTTP 调用 REST API 完成新增→检索→详情→编辑→按新笔记检索→统计→删除→删除后检索为空的全流程实测。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 代码与使用 -->
+<section class="block alt" id="code">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-kicker">代码与使用说明</div>
+      <h2>获取代码，本地运行</h2>
+      <p>项目代码已提交至比赛指定分支：<a href="https://github.com/ssyyss12138/OceanBase-p/tree/2026-competition-ecosystem/qoder" target="_blank" rel="noopener">github.com/ssyyss12138/OceanBase-p（2026-competition-ecosystem 分支，qoder/ 目录）</a>。</p>
+    </div>
+
+    <div class="steps">
+      <h3>依赖要求</h3>
+      <ol>
+        <li>Python 3.11 及以上（pyseekdb 要求）；macOS 需 Apple Silicon（ARM64）或 Linux 环境。</li>
+        <li>依赖清单见 qoder/requirements.txt：pyseekdb、pylibseekdb、fastapi、uvicorn。</li>
+      </ol>
+    </div>
+
+    <div class="steps">
+      <h3>安装与启动</h3>
+      <div class="codeblock">
+        <span class="c"># 在 qoder/ 目录下</span><br />
+        python3.11 -m venv .venv<br />
+        .venv/bin/pip install -r requirements.txt<br />
+        <br />
+        <span class="c"># 启动应用</span><br />
+        .venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000<br />
+        <span class="c"># 浏览器打开 http://127.0.0.1:8000</span>
+      </div>
+      <p style="font-size:14px;color:var(--ink-2);">首次启动自动初始化 seekdb 数据库并幂等写入 3 条演示文献；数据持久化在 qoder/data/seekdb.db/ 目录。</p>
+    </div>
+
+    <div class="steps">
+      <h3>运行测试</h3>
+      <div class="codeblock">
+        <span class="c"># seekdb 真实读写与增删改查验证（27 项断言）</span><br />
+        .venv/bin/python scripts/verify_seekdb.py --write<br />
+        <span class="c"># 新进程重开数据库，校验跨进程持久化（9 项断言）</span><br />
+        .venv/bin/python scripts/verify_seekdb.py --verify
+      </div>
+      <p style="font-size:14px;color:var(--ink-2);">两个阶段分别以独立进程运行，以真实证明数据已持久化到 seekdb；全部断言通过时退出码为 0。</p>
+    </div>
+
+    <div class="note">
+      <b>运行方式说明：</b>PaperTrail 是完整的本地部署应用（FastAPI 后端 + seekdb 嵌入式数据库）。本项目展示网站由 Qoder Sites 发布，用于作品介绍与评审入口；核心应用目前通过本地部署运行，上述演示截图为本地运行的真实画面，localhost 地址仅用于本地启动，不是在线体验地址。
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="wrap">
+    <div>PaperTrail · 科研文献检索工作台<br />2026 OceanBase 数据库大赛 · Qoder 赛道作品</div>
+    <div>代码仓库：<a href="https://github.com/ssyyss12138/OceanBase-p/tree/2026-competition-ecosystem/qoder" target="_blank" rel="noopener">GitHub</a>　|　技术栈：FastAPI · pyseekdb · HTML/CSS/JavaScript</div>
+  </div>
+</footer>
+
+</body>
+</html>
